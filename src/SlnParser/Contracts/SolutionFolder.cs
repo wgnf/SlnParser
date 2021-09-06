@@ -16,19 +16,17 @@ namespace SlnParser.Contracts
 		/// <param name="name">The name</param>
 		/// <param name="projectTypeGuid">The project-type id</param>
 		/// <param name="projectType">The well-known project-type</param>
-		/// <param name="projects">The contained <see cref="IProject"/>s</param>
 		public SolutionFolder(
 			Guid id,
 			string name,
 			Guid projectTypeGuid,
-			ProjectType projectType,
-			IList<IProject> projects)
+			ProjectType projectType)
 		{
 			Id = id;
 			Name = name;
 			ProjectTypeGuid = projectTypeGuid;
 			ProjectType = projectType;
-			Projects = new ReadOnlyCollection<IProject>(projects);
+			Projects = new Collection<IProject>();
 		}
 
 		/// <inheritdoc/>
@@ -46,6 +44,6 @@ namespace SlnParser.Contracts
 		/// <summary>
 		///		The contained <see cref="IProject"/>s in the Solution Folder
 		/// </summary>
-		public IReadOnlyCollection<IProject> Projects { get; }
+		public IReadOnlyCollection<IProject> Projects { get; internal set; }
 	}
 }

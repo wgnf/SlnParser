@@ -2,29 +2,45 @@
 using SlnParser.Contracts.Helper;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace SlnParser.Helper
 {
 	internal class ProjectParser : IProjectParser
 	{
+		private readonly IProjectTypeMapper _projectTypeMapper;
+		
+		public ProjectParser()
+		{
+			_projectTypeMapper = new ProjectTypeMapper();
+		}
+		
 		public void Enrich(Solution solution, IEnumerable<string> fileContents)
 		{
 			if (solution == null) throw new ArgumentNullException(nameof(solution));
 			if (fileContents == null) throw new ArgumentNullException(nameof(fileContents));
 
-			var flatProjectList = new List<IProject>();
+			var flatProjectList = GetProjectsFlat(fileContents);
+			solution.Projects = flatProjectList.ToList().AsReadOnly();
+		}
+
+		private IEnumerable<IProject> GetProjectsFlat(IEnumerable<string> fileContents)
+		{
+			var flatProjectList = new Collection<IProject>();
 			foreach (var line in fileContents)
 				ProcessLine(line, flatProjectList);
-
-			solution.Projects = flatProjectList;
+			
+			return flatProjectList;
 		}
-		private static void ProcessLine(string line, IList<IProject> flatProjectList)
+
+		private void ProcessLine(string line, ICollection<IProject> flatProjectList)
 		{
 			if (!line.StartsWith("Project(\"{")) return;
 
-			// c.f.: regexr.com/650df
+			// c.f.: https://regexr.com/650df
 			const string pattern = @"Project\(""\{(?<projectTypeGuid>[A-Za-z0-9\-]+)\}""\) = ""(?<projectName>.+)"", ""(?<projectPath>.+)"", ""\{(?<projectGuid>[A-Za-z0-9\-]+)\}";
 			var match = Regex.Match(line, pattern);
 			if (!match.Success) return;
@@ -38,12 +54,22 @@ namespace SlnParser.Helper
 			var projectGuid = Guid.Parse(projectGuidString);
 			var projectFile = new FileInfo(projectPath);
 
-			var project = new SolutionProject(
-				projectGuid,
-				projectName,
-				projectTypeGuid,
-				ProjectType.Unknown,
-				projectFile);
+			var projectType = _projectTypeMapper.Map(projectTypeGuid);
+
+			IProject project;
+			if (projectType == ProjectType.SolutionFolder)
+				project = new SolutionFolder(
+					projectGuid,
+					projectName,
+					projectTypeGuid,
+					projectType);
+			else
+				project = new SolutionProject(
+					projectGuid,
+					projectName,
+					projectTypeGuid,
+					projectType,
+					projectFile);
 
 			flatProjectList.Add(project);
 		}

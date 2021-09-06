@@ -39,6 +39,6 @@ namespace SlnParser.Contracts
 		/// <summary>
 		///		The <see cref="IProject"/>s contained in the solution
 		/// </summary>
-		public IList<IProject> Projects { get; set; }
+		public IReadOnlyCollection<IProject> Projects { get; internal set; }
     }
 }

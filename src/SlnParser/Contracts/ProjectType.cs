@@ -8,6 +8,16 @@
 		/// <summary>
 		///		The <see cref="ProjectType"/> is not known
 		/// </summary>
-		Unknown
+		Unknown,
+		
+		/// <summary>
+		///		A Solution Folder
+		/// </summary>
+		SolutionFolder,
+		
+		/// <summary>
+		///		A C# Class Library
+		/// </summary>
+		CSharpClassLibrary
 	}
 }

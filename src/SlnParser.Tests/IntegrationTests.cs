@@ -2,6 +2,7 @@
 using SlnParser.Contracts;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using Xunit;
 
 namespace SlnParser.Tests
@@ -49,59 +50,85 @@ namespace SlnParser.Tests
 				.Should()
 				.HaveCount(3);
 
-			// 1. Project - Classlib
+			// 1. Project - ClassLib
 			solution
-				.Projects[0]
+				.Projects
+				.ElementAt(0)
 				.Should()
 				.BeOfType<SolutionProject>();
 			solution
-				.Projects[0]
+				.Projects
+				.ElementAt(0)
 				.Name
 				.Should()
 				.Be("SlnParser");
 			solution
-				.Projects[0]
+				.Projects
+				.ElementAt(0)
 				.As<SolutionProject>()
 				.File
 				.FullName
 				.Should()
 				.Contain(@"SlnParser\SlnParser.csproj");
+			solution
+				.Projects
+				.ElementAt(0)
+				.ProjectType
+				.Should()
+				.Be(ProjectType.CSharpClassLibrary);
 
-			// TODO: Will be implemented later on
 			// 2. Project - Solution Folder
-			//solution
-			//	.Projects[1]
-			//	.Should()
-			//	.BeOfType<SolutionFolder>();
-			//solution
-			//	.Projects[1]
-			//	.Name
-			//	.Should()
-			//	.Be("Solution Items");
-			//solution
-			//	.Projects[1]
-			//	.As<SolutionFolder>()
-			//	.Projects
-			//	.Should()
-			//	.BeEmpty();
+			solution
+				.Projects
+				.ElementAt(1)
+				.Should()
+				.BeOfType<SolutionFolder>();
+			solution
+				.Projects
+				.ElementAt(1)
+				.Name
+				.Should()
+				.Be("Solution Items");
+			solution
+				.Projects
+				.ElementAt(1)
+				.As<SolutionFolder>()
+				.Projects
+				.Should()
+				.BeEmpty();
+			solution
+				.Projects
+				.ElementAt(1)
+				.ProjectType
+				.Should()
+				.Be(ProjectType.SolutionFolder);
 
 			// 3. Project - Test Project
 			solution
-				.Projects[2]
+				.Projects
+				.ElementAt(2)
 				.Should()
 				.BeOfType<SolutionProject>();
 			solution
-				.Projects[2]
+				.Projects
+				.ElementAt(2)
 				.Name
 				.Should()
 				.Be("SlnParser.Tests");
 			solution
-				.Projects[2]
+				.Projects
+				.ElementAt(2)
 				.As<SolutionProject>()
 				.File
 				.FullName
 				.Should()
 				.Contain(@"SlnParser.Tests\SlnParser.Tests.csproj");
+			solution
+				.Projects
+				.ElementAt(2)
+				.ProjectType
+				.Should()
+				.Be(ProjectType.CSharpClassLibrary);
 		}
 
 		[Fact]
