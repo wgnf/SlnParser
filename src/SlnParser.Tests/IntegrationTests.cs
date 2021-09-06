@@ -144,6 +144,11 @@ namespace SlnParser.Tests
 				.AllProjects
 				.Should()
 				.HaveCount(8);
+
+			solution
+				.Projects
+				.Should()
+				.HaveCount(4);
 		}
 
 		private static FileInfo LoadSolution(string solutionName)

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace SlnParser.Contracts
+namespace SlnParser.Contracts.Exceptions
 {
 	/// <summary>
 	///		Exception that is thrown when a solution could not be parsed

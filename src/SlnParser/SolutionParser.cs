@@ -1,4 +1,5 @@
 ﻿using SlnParser.Contracts;
+using SlnParser.Contracts.Exceptions;
 using SlnParser.Contracts.Helper;
 using SlnParser.Helper;
 using System;
@@ -87,15 +88,14 @@ namespace SlnParser
                 File = solutionFile
             };
             var allLines = File.ReadAllLines(solutionFile.FullName);
-            _projectParser.Enrich(solution, allLines);
+            var allLinesTrimmed = allLines
+	            .Select(line => line.Trim())
+	            .Where(line => line.Length > 0);
+            
+            _projectParser.Enrich(solution, allLinesTrimmed);
 
             foreach (var line in allLines)
-            {
-                var trimmedLine = line.Trim();
-                if (trimmedLine.Length == 0) continue;
-
                 ProcessLine(line, solution);
-            }
 
             return solution;
         }

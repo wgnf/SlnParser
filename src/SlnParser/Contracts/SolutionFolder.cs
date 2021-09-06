@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace SlnParser.Contracts
 {
@@ -9,6 +10,8 @@ namespace SlnParser.Contracts
 	/// </summary>
 	public class SolutionFolder : IProject
 	{
+		private readonly ICollection<IProject> _projects = new Collection<IProject>();
+		
 		/// <summary>
 		///		Creates a new instance of <see cref="SolutionFolder"/>
 		/// </summary>
@@ -26,7 +29,6 @@ namespace SlnParser.Contracts
 			Name = name;
 			TypeGuid = typeGuid;
 			Type = type;
-			Projects = new Collection<IProject>();
 		}
 
 		/// <inheritdoc/>
@@ -44,6 +46,11 @@ namespace SlnParser.Contracts
 		/// <summary>
 		///		The contained <see cref="IProject"/>s in the Solution Folder
 		/// </summary>
-		public IReadOnlyCollection<IProject> Projects { get; internal set; }
+		public IReadOnlyCollection<IProject> Projects => _projects.ToList().AsReadOnly();
+
+		internal void AddProject(IProject project)
+		{
+			_projects.Add(project);
+		}
 	}
 }
