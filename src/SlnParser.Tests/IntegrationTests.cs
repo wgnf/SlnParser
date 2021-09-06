@@ -73,7 +73,7 @@ namespace SlnParser.Tests
 			solution
 				.Projects
 				.ElementAt(0)
-				.ProjectType
+				.Type
 				.Should()
 				.Be(ProjectType.CSharpClassLibrary);
 
@@ -99,7 +99,7 @@ namespace SlnParser.Tests
 			solution
 				.Projects
 				.ElementAt(1)
-				.ProjectType
+				.Type
 				.Should()
 				.Be(ProjectType.SolutionFolder);
 
@@ -126,7 +126,7 @@ namespace SlnParser.Tests
 			solution
 				.Projects
 				.ElementAt(2)
-				.ProjectType
+				.Type
 				.Should()
 				.Be(ProjectType.CSharpClassLibrary);
 		}

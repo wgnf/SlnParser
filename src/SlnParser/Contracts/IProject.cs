@@ -20,11 +20,11 @@ namespace SlnParser.Contracts
 		/// <summary>
 		///		The Id of the Project-Type
 		/// </summary>
-		Guid ProjectTypeGuid { get; }
+		Guid TypeGuid { get; }
 
 		/// <summary>
-		///		The well-known <see cref="ProjectType"/>
+		///		The well-known <see cref="Type"/>
 		/// </summary>
-		ProjectType ProjectType { get; }
+		ProjectType Type { get; }
 	}
 }
