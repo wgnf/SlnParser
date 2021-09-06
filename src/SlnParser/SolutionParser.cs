@@ -1,14 +1,25 @@
 ﻿using SlnParser.Contracts;
+using SlnParser.Contracts.Helper;
+using SlnParser.Helper;
 using System;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace SlnParser
 {
 	/// <inheritdoc/>
     public class SolutionParser : ISolutionParser
     {
+	    private readonly IProjectParser _projectParser;
+
+	    /// <summary>
+	    ///		Creates a new instance of <see cref="SolutionParser"/>
+	    /// </summary>
+	    public SolutionParser()
+	    {
+		    _projectParser = new ProjectParser();
+	    }
+	    
 		/// <inheritdoc/>
 		public Solution Parse(string solutionFileName)
         {
@@ -76,6 +87,7 @@ namespace SlnParser
                 File = solutionFile
             };
             var allLines = File.ReadAllLines(solutionFile.FullName);
+            _projectParser.Enrich(solution, allLines);
 
             foreach (var line in allLines)
             {
@@ -88,15 +100,14 @@ namespace SlnParser
             return solution;
         }
 
-        private void ProcessLine(string line, Solution solution)
+        private static void ProcessLine(string line, Solution solution)
         {
 			ProcessSolutionFileFormatVersion(line, solution);
 			ProcessVisualStudioVersion(line, solution);
 			ProcessMinimumVisualStudioVersion(line, solution);
-            ProcessProject(line, solution);
         }
 
-		private void ProcessSolutionFileFormatVersion(string line, Solution solution)
+		private static void ProcessSolutionFileFormatVersion(string line, Solution solution)
 		{
 			if (!line.StartsWith("Microsoft Visual Studio Solution File, ")) return;
 
@@ -108,7 +119,7 @@ namespace SlnParser
 			solution.FileFormatVersion = fileFormatVersion;
 		}
 
-		private void ProcessVisualStudioVersion(string line, Solution solution)
+		private static void ProcessVisualStudioVersion(string line, Solution solution)
 		{
 			if (!line.StartsWith("VisualStudioVersion = ")) return;
 
@@ -119,7 +130,7 @@ namespace SlnParser
 			solution.VisualStudioVersion.Version = visualStudioVersion;
 		}
 
-		private void ProcessMinimumVisualStudioVersion(string line, Solution solution)
+		private static void ProcessMinimumVisualStudioVersion(string line, Solution solution)
 		{
 			if (!line.StartsWith("MinimumVisualStudioVersion = ")) return;
 
@@ -129,33 +140,5 @@ namespace SlnParser
 			solution.VisualStudioVersion ??= new VisualStudioVersion();
 			solution.VisualStudioVersion.MinimumVersion = minimumVisualStudioVersion;
 		}
-
-        private void ProcessProject(string line, Solution solution)
-        {
-            if (!line.StartsWith("Project(\"{")) return;
-
-			// c.f.: regexr.com/650df
-			const string pattern = @"Project\(""\{(?<projectTypeGuid>[A-Za-z0-9\-]+)\}""\) = ""(?<projectName>.+)"", ""(?<projectPath>.+)"", ""\{(?<projectGuid>[A-Za-z0-9\-]+)\}";
-			var match = Regex.Match(line, pattern);
-			if (!match.Success) return;
-
-			var projectTypeGuidString = match.Groups["projectTypeGuid"].Value;
-			var projectName = match.Groups["projectName"].Value;
-			var projectPath = match.Groups["projectPath"].Value;
-			var projectGuidString = match.Groups["projectGuid"].Value;
-
-			var projectTypeGuid = Guid.Parse(projectTypeGuidString);
-			var projectGuid = Guid.Parse(projectGuidString);
-			var projectFile = new FileInfo(projectPath);
-
-			var project = new SolutionProject(
-				projectGuid,
-				projectName,
-				projectTypeGuid,
-				ProjectType.Unknown,
-				projectFile);
-
-			solution.Projects.Add(project);
-        }
     }
 }

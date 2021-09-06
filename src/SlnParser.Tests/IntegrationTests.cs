@@ -104,6 +104,21 @@ namespace SlnParser.Tests
 				.Contain(@"SlnParser.Tests\SlnParser.Tests.csproj");
 		}
 
+		[Fact]
+		[Category("ParseSolution:TestSln")]
+		public void Should_Be_Able_To_Parse_TestSln_Solution_Correctly()
+		{
+			var solutionFile = LoadSolution("TestSln");
+			var sut = new SolutionParser();
+			
+			var solution = sut.Parse(solutionFile);
+
+			solution
+				.Projects
+				.Should()
+				.HaveCount(8);
+		}
+
 		private static FileInfo LoadSolution(string solutionName)
 		{
 			var solutionFileName = $"./Solutions/{solutionName}.sln";
