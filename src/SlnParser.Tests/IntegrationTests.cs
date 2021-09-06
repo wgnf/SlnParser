@@ -46,24 +46,24 @@ namespace SlnParser.Tests
 				.Be("10.0.40219.1");
 
 			solution
-				.Projects
+				.AllProjects
 				.Should()
 				.HaveCount(3);
 
 			// 1. Project - ClassLib
 			solution
-				.Projects
+				.AllProjects
 				.ElementAt(0)
 				.Should()
 				.BeOfType<SolutionProject>();
 			solution
-				.Projects
+				.AllProjects
 				.ElementAt(0)
 				.Name
 				.Should()
 				.Be("SlnParser");
 			solution
-				.Projects
+				.AllProjects
 				.ElementAt(0)
 				.As<SolutionProject>()
 				.File
@@ -71,7 +71,7 @@ namespace SlnParser.Tests
 				.Should()
 				.Contain(@"SlnParser\SlnParser.csproj");
 			solution
-				.Projects
+				.AllProjects
 				.ElementAt(0)
 				.Type
 				.Should()
@@ -79,25 +79,25 @@ namespace SlnParser.Tests
 
 			// 2. Project - Solution Folder
 			solution
-				.Projects
+				.AllProjects
 				.ElementAt(1)
 				.Should()
 				.BeOfType<SolutionFolder>();
 			solution
-				.Projects
+				.AllProjects
 				.ElementAt(1)
 				.Name
 				.Should()
 				.Be("Solution Items");
 			solution
-				.Projects
+				.AllProjects
 				.ElementAt(1)
 				.As<SolutionFolder>()
 				.Projects
 				.Should()
 				.BeEmpty();
 			solution
-				.Projects
+				.AllProjects
 				.ElementAt(1)
 				.Type
 				.Should()
@@ -105,18 +105,18 @@ namespace SlnParser.Tests
 
 			// 3. Project - Test Project
 			solution
-				.Projects
+				.AllProjects
 				.ElementAt(2)
 				.Should()
 				.BeOfType<SolutionProject>();
 			solution
-				.Projects
+				.AllProjects
 				.ElementAt(2)
 				.Name
 				.Should()
 				.Be("SlnParser.Tests");
 			solution
-				.Projects
+				.AllProjects
 				.ElementAt(2)
 				.As<SolutionProject>()
 				.File
@@ -124,7 +124,7 @@ namespace SlnParser.Tests
 				.Should()
 				.Contain(@"SlnParser.Tests\SlnParser.Tests.csproj");
 			solution
-				.Projects
+				.AllProjects
 				.ElementAt(2)
 				.Type
 				.Should()
@@ -141,7 +141,7 @@ namespace SlnParser.Tests
 			var solution = sut.Parse(solutionFile);
 
 			solution
-				.Projects
+				.AllProjects
 				.Should()
 				.HaveCount(8);
 		}

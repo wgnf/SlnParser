@@ -24,7 +24,7 @@ namespace SlnParser.Helper
 			if (fileContents == null) throw new ArgumentNullException(nameof(fileContents));
 
 			var flatProjectList = GetProjectsFlat(fileContents);
-			solution.Projects = flatProjectList.ToList().AsReadOnly();
+			solution.AllProjects = flatProjectList.ToList().AsReadOnly();
 		}
 
 		private IEnumerable<IProject> GetProjectsFlat(IEnumerable<string> fileContents)

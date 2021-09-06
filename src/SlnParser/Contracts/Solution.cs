@@ -13,7 +13,7 @@ namespace SlnParser.Contracts
 		/// </summary>
 		public Solution()
 		{
-			Projects = new List<IProject>();
+			AllProjects = new List<IProject>();
 		}
 
 		/// <summary>
@@ -37,7 +37,12 @@ namespace SlnParser.Contracts
 		public VisualStudioVersion VisualStudioVersion { get; set; }
 
 		/// <summary>
-		///		The <see cref="IProject"/>s contained in the solution
+		///		A flat list of all <see cref="IProject"/>s contained in the solution
+		/// </summary>
+		public IReadOnlyCollection<IProject> AllProjects { get; internal set; }
+
+		/// <summary>
+		///		A structured list of all <see cref="IProject"/>s contained in the solution
 		/// </summary>
 		public IReadOnlyCollection<IProject> Projects { get; internal set; }
     }
