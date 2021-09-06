@@ -64,9 +64,6 @@ csharp_style_var_when_type_is_apparent = true:suggestion
 
 #Style - language keyword and framework type options
 
-#prefer the language keyword for local variables, method parameters, and class members, instead of the type name, for types that have a keyword to represent them
-dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
-
 #Style - modifier options
 
 #prefer accessibility modifiers to be declared except for public interface members. This will currently not differ from always and will act as future proofing for if C# adds default interface methods.
@@ -75,12 +72,14 @@ dotnet_style_require_accessibility_modifiers = for_non_interface_members:suggest
 #Style - Modifier preferences
 
 #when this rule is set to a list of modifiers, prefer the specified ordering.
-csharp_preferred_modifier_order = public,private,static,readonly:suggestion
+csharp_preferred_modifier_order = public,internal,private,static,readonly:suggestion
 
 #Style - qualification options
 
 #prefer fields not to be prefaced with this. or Me. in Visual Basic
 dotnet_style_qualification_for_field = false:suggestion
+
+end_of_line = crlf
 
 [*.{cs,vb}]
 indent_style=tab
