@@ -10,7 +10,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlnParser.Tests", "SlnParser.Tests\SlnParser.Tests.csproj", "{BB52A27D-766E-4ECD-B888-BD86405134C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SlnParser.Tests", "SlnParser.Tests\SlnParser.Tests.csproj", "{BB52A27D-766E-4ECD-B888-BD86405134C1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SlnParser.Build", "..\build\SlnParser.Build.csproj", "{8E20F4E9-009A-45D3-9CD8-328CFDC2778C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,6 +48,17 @@ Global
 		{BB52A27D-766E-4ECD-B888-BD86405134C1}.Release|x64.Build.0 = Release|Any CPU
 		{BB52A27D-766E-4ECD-B888-BD86405134C1}.Release|x86.ActiveCfg = Release|Any CPU
 		{BB52A27D-766E-4ECD-B888-BD86405134C1}.Release|x86.Build.0 = Release|Any CPU
+		{8E20F4E9-009A-45D3-9CD8-328CFDC2778C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E20F4E9-009A-45D3-9CD8-328CFDC2778C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8E20F4E9-009A-45D3-9CD8-328CFDC2778C}.Debug|x64.Build.0 = Debug|Any CPU
+		{8E20F4E9-009A-45D3-9CD8-328CFDC2778C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8E20F4E9-009A-45D3-9CD8-328CFDC2778C}.Debug|x86.Build.0 = Debug|Any CPU
+		{8E20F4E9-009A-45D3-9CD8-328CFDC2778C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E20F4E9-009A-45D3-9CD8-328CFDC2778C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E20F4E9-009A-45D3-9CD8-328CFDC2778C}.Release|x64.ActiveCfg = Release|Any CPU
+		{8E20F4E9-009A-45D3-9CD8-328CFDC2778C}.Release|x64.Build.0 = Release|Any CPU
+		{8E20F4E9-009A-45D3-9CD8-328CFDC2778C}.Release|x86.ActiveCfg = Release|Any CPU
+		{8E20F4E9-009A-45D3-9CD8-328CFDC2778C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

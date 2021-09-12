@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SlnParser.Helper
 {
-	public class ProjectTypeMapper : IProjectTypeMapper
+	internal class ProjectTypeMapper : IProjectTypeMapper
 	{
 		private readonly IDictionary<Guid, ProjectType> _mapping;
 

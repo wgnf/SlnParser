@@ -2,7 +2,7 @@
 
 namespace SlnParser.Contracts.Helper
 {
-	public interface IProjectTypeMapper
+	internal interface IProjectTypeMapper
 	{
 		ProjectType Map(Guid typeGuid);
 	}

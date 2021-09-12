@@ -1,0 +1,21 @@
+name: "Release"
+
+on:
+  push:
+    tags:
+      - v**.**.** # Semantic Versioning like "v11.22.33"
+
+jobs:
+  publish:
+    name: Build And Test And Publish
+    runs-on: windows-2019
+    steps:
+    - uses: actions/checkout@v2
+    # Additional fetch to get all commits and tags
+    - run: git fetch --unshallow
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+    - name: Run Publish using Nuke
+      run: ./build.ps1 -Target Publish -Configuration Release --nuget_api_key ${{ secrets.NUGET_API_KEY }} --gh_api_key ${{ secrets.GH_API_KEY }}

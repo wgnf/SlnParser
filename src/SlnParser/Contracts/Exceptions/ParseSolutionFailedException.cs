@@ -17,6 +17,7 @@ namespace SlnParser.Contracts.Exceptions
         public ParseSolutionFailedException(FileInfo solutionFile, Exception inner) 
             : base($"Could not parse provided Solution '{solutionFile.FullName}'. See inner exception for more information", inner) { }
 
+		/// <inheritdoc/>
         protected ParseSolutionFailedException(
           System.Runtime.Serialization.SerializationInfo info,
           System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
