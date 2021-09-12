@@ -18,4 +18,4 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Run Publish using Nuke
-      run: ./build.ps1 -Target Publish -Configuration Release --nuget_api_key ${{ secrets.NUGET_API_KEY }} --gh_api_key ${{ secrets.GH_API_KEY }}
+      run: ./build.ps1 -Target Publish -Configuration Release --nuget_api_key ${{ secrets.NUGET_API_KEY }}
