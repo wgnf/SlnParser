@@ -45,6 +45,140 @@ namespace SlnParser.Tests
 				.Should()
 				.Be("10.0.40219.1");
 
+            // -- Solution Configuration Platforms
+
+            solution
+                .ConfigurationPlatforms
+                .Should()
+                .HaveCount(6);
+
+            solution
+                .ConfigurationPlatforms
+                .ElementAt(0)
+                .Name
+                .Should()
+                .Be("Debug|Any CPU");
+
+            solution
+                .ConfigurationPlatforms
+                .ElementAt(0)
+                .Configuration
+                .Should()
+                .Be(BuildConfiguration.Debug);
+
+            solution
+                .ConfigurationPlatforms
+                .ElementAt(0)
+                .Platform
+                .Should()
+                .Be(BuildPlatform.AnyCpu);
+
+            solution
+                .ConfigurationPlatforms
+                .ElementAt(1)
+                .Name
+                .Should()
+                .Be("Debug|x64");
+
+            solution
+                .ConfigurationPlatforms
+                .ElementAt(1)
+                .Configuration
+                .Should()
+                .Be(BuildConfiguration.Debug);
+
+            solution
+                .ConfigurationPlatforms
+                .ElementAt(1)
+                .Platform
+                .Should()
+                .Be(BuildPlatform.X64);
+            
+            solution
+                .ConfigurationPlatforms
+                .ElementAt(2)
+                .Name
+                .Should()
+                .Be("Debug|x86");
+
+            solution
+                .ConfigurationPlatforms
+                .ElementAt(2)
+                .Configuration
+                .Should()
+                .Be(BuildConfiguration.Debug);
+
+            solution
+                .ConfigurationPlatforms
+                .ElementAt(2)
+                .Platform
+                .Should()
+                .Be(BuildPlatform.X86);
+            
+            solution
+                .ConfigurationPlatforms
+                .ElementAt(3)
+                .Name
+                .Should()
+                .Be("Release|Any CPU");
+
+            solution
+                .ConfigurationPlatforms
+                .ElementAt(3)
+                .Configuration
+                .Should()
+                .Be(BuildConfiguration.Release);
+
+            solution
+                .ConfigurationPlatforms
+                .ElementAt(3)
+                .Platform
+                .Should()
+                .Be(BuildPlatform.AnyCpu);
+            
+            solution
+                .ConfigurationPlatforms
+                .ElementAt(4)
+                .Name
+                .Should()
+                .Be("Release|x64");
+
+            solution
+                .ConfigurationPlatforms
+                .ElementAt(4)
+                .Configuration
+                .Should()
+                .Be(BuildConfiguration.Release);
+
+            solution
+                .ConfigurationPlatforms
+                .ElementAt(4)
+                .Platform
+                .Should()
+                .Be(BuildPlatform.X64);
+            
+            solution
+                .ConfigurationPlatforms
+                .ElementAt(5)
+                .Name
+                .Should()
+                .Be("Release|x86");
+
+            solution
+                .ConfigurationPlatforms
+                .ElementAt(5)
+                .Configuration
+                .Should()
+                .Be(BuildConfiguration.Release);
+
+            solution
+                .ConfigurationPlatforms
+                .ElementAt(5)
+                .Platform
+                .Should()
+                .Be(BuildPlatform.X86);
+
+            // -- Projects
 			solution
 				.AllProjects
 				.Should()

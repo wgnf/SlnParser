@@ -1,9 +1,6 @@
-using System.Collections.Generic;
-
 namespace SlnParser.Contracts.Helper
 {
-	internal interface IProjectParser
+	internal interface IProjectParser : IEnrichSolution
 	{
-		void Enrich(Solution solution, IEnumerable<string> fileContents);
 	}
 }

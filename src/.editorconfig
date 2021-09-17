@@ -1,9 +1,4 @@
-# Rules in this file were initially inferred by Visual Studio IntelliCode from the X:\Dev\git\dotnet-nuget-licenses\src codebase based on best match to current usage at 01/09/2021
-# You can modify the rules from these initially generated values to suit your own policies
-# You can learn more about editorconfig here: https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference
 [*.cs]
-
-
 #Core editorconfig formatting - indentation
 
 #use soft tabs (spaces) for indentation
@@ -11,7 +6,7 @@ indent_style = space
 
 #Formatting - new line options
 
-#require members of object intializers to be on separate lines
+#require members of object initializers to be on separate lines
 csharp_new_line_before_members_in_object_initializers = true
 #require braces to be on a new line for types and methods (also known as "Allman" style)
 csharp_new_line_before_open_brace = all
@@ -72,7 +67,7 @@ dotnet_style_require_accessibility_modifiers = for_non_interface_members:suggest
 #Style - Modifier preferences
 
 #when this rule is set to a list of modifiers, prefer the specified ordering.
-csharp_preferred_modifier_order = public,internal,private,static,readonly:suggestion
+csharp_preferred_modifier_order = public,internal,private,static,readonly,sealed:suggestion
 
 #Style - qualification options
 
@@ -80,6 +75,4 @@ csharp_preferred_modifier_order = public,internal,private,static,readonly:sugges
 dotnet_style_qualification_for_field = false:suggestion
 
 end_of_line = crlf
-
-[*.{cs,vb}]
-indent_style=tab
+insert_final_newline = true

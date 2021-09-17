@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 
 namespace SlnParser.Helper
 {
-	internal class ProjectParser : IProjectParser
+	internal sealed class ProjectParser : IProjectParser
 	{
 		private readonly IProjectTypeMapper _projectTypeMapper;
 		
@@ -96,7 +96,7 @@ namespace SlnParser.Helper
 			const string startNestedProjects = "GlobalSection(NestedProjects";
 			const string endNestedProjects = "EndGlobalSection";
 
-			var globalSectionNestedProjects = fileContents
+			var section = fileContents
 				.SkipWhile(line => !line.StartsWith(startNestedProjects))
 				.TakeWhile(line => !line.StartsWith(endNestedProjects))
 				.Where(line => !line.StartsWith(startNestedProjects))
@@ -104,7 +104,7 @@ namespace SlnParser.Helper
 				.Where(line => !string.IsNullOrWhiteSpace(line));
 
 			var nestedProjectMappings = new Collection<NestedProjectMapping>();
-			foreach (var nestedProject in globalSectionNestedProjects)
+			foreach (var nestedProject in section)
 				if (TryGetNestedProjectMapping(nestedProject, out var nestedProjectMapping))
 					nestedProjectMappings.Add(nestedProjectMapping);
 

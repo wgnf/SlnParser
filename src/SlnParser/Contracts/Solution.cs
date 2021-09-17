@@ -45,5 +45,10 @@ namespace SlnParser.Contracts
 		///		A structured list of all <see cref="IProject"/>s contained in the solution
 		/// </summary>
 		public IReadOnlyCollection<IProject> Projects { get; internal set; }
+        
+        /// <summary>
+        ///     The <see cref="ConfigurationPlatform"/>s configured for this solution
+        /// </summary>
+        public IReadOnlyCollection<ConfigurationPlatform> ConfigurationPlatforms { get; internal set; }
     }
 }

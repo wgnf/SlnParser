@@ -9,9 +9,10 @@ using System.Linq;
 namespace SlnParser
 {
 	/// <inheritdoc/>
-    public class SolutionParser : ISolutionParser
+    public sealed class SolutionParser : ISolutionParser
     {
 	    private readonly IProjectParser _projectParser;
+        private readonly ISolutionConfigurationPlatformsParser _solutionConfigurationPlatformsParser;
 
 	    /// <summary>
 	    ///		Creates a new instance of <see cref="SolutionParser"/>
@@ -19,7 +20,8 @@ namespace SlnParser
 	    public SolutionParser()
 	    {
 		    _projectParser = new ProjectParser();
-	    }
+            _solutionConfigurationPlatformsParser = new SolutionConfigurationPlatformsParser();
+        }
 	    
 		/// <inheritdoc/>
 		public Solution Parse(string solutionFileName)
@@ -89,10 +91,12 @@ namespace SlnParser
             };
             var allLines = File.ReadAllLines(solutionFile.FullName);
             var allLinesTrimmed = allLines
-	            .Select(line => line.Trim())
-	            .Where(line => line.Length > 0);
+                .Select(line => line.Trim())
+                .Where(line => line.Length > 0)
+                .ToList();
             
             _projectParser.Enrich(solution, allLinesTrimmed);
+            _solutionConfigurationPlatformsParser.Enrich(solution, allLinesTrimmed);
 
             foreach (var line in allLines)
                 ProcessLine(line, solution);
