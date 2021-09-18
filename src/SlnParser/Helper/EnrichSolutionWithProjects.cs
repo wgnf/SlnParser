@@ -10,11 +10,11 @@ using System.Text.RegularExpressions;
 
 namespace SlnParser.Helper
 {
-	internal sealed class ProjectParser : IProjectParser
+	internal sealed class EnrichSolutionWithProjects : IEnrichSolution
 	{
 		private readonly IProjectTypeMapper _projectTypeMapper;
 		
-		public ProjectParser()
+		public EnrichSolutionWithProjects()
 		{
 			_projectTypeMapper = new ProjectTypeMapper();
 		}

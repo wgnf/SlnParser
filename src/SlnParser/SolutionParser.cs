@@ -3,6 +3,7 @@ using SlnParser.Contracts.Exceptions;
 using SlnParser.Contracts.Helper;
 using SlnParser.Helper;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -11,16 +12,18 @@ namespace SlnParser
 	/// <inheritdoc/>
     public sealed class SolutionParser : ISolutionParser
     {
-	    private readonly IProjectParser _projectParser;
-        private readonly ISolutionConfigurationPlatformsParser _solutionConfigurationPlatformsParser;
+        private readonly IEnumerable<IEnrichSolution> _solutionEnrichers;
 
 	    /// <summary>
 	    ///		Creates a new instance of <see cref="SolutionParser"/>
 	    /// </summary>
 	    public SolutionParser()
-	    {
-		    _projectParser = new ProjectParser();
-            _solutionConfigurationPlatformsParser = new SolutionConfigurationPlatformsParser();
+        {
+            _solutionEnrichers = new List<IEnrichSolution>
+            {
+                new EnrichSolutionWithProjects(), 
+                new EnrichSolutionWithSolutionConfigurationPlatforms()
+            };
         }
 	    
 		/// <inheritdoc/>
@@ -95,8 +98,8 @@ namespace SlnParser
                 .Where(line => line.Length > 0)
                 .ToList();
             
-            _projectParser.Enrich(solution, allLinesTrimmed);
-            _solutionConfigurationPlatformsParser.Enrich(solution, allLinesTrimmed);
+            foreach (var enricher in _solutionEnrichers)
+                enricher.Enrich(solution, allLinesTrimmed);
 
             foreach (var line in allLines)
                 ProcessLine(line, solution);

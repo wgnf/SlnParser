@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace SlnParser.Helper
 {
-    internal sealed class SolutionConfigurationPlatformsParser : ISolutionConfigurationPlatformsParser
+    internal sealed class EnrichSolutionWithSolutionConfigurationPlatforms : IEnrichSolution
     {
         public void Enrich(Solution solution, IEnumerable<string> fileContents)
         {
