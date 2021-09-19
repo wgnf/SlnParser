@@ -42,4 +42,6 @@ var csharpProjects = parsedSolution
 
 The current list of [project types](src/Contracts/../SlnParser/Contracts/ProjectType.cs) is not yet **complete**.  
   
-If you encounter any Projects where the `Type` is `ProjectType.Unknown` and you know for sure which project type that is (providing an example would be best) create an _Issue_ providing the `TypeGuid` and what kind of project that is. Thanks! 😊
+If you encounter any Projects where the `Type` is `ProjectType.Unknown` and you know for sure which project type that is (providing an example would be best) create an _Issue_ providing the `TypeGuid` and what kind of project that is. Thanks! 😊  
+  
+Additionally if you encounter any project whose type has been misidentified, let me know as well!
