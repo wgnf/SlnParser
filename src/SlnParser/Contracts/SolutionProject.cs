@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 
 namespace SlnParser.Contracts
 {
@@ -8,6 +11,9 @@ namespace SlnParser.Contracts
 	/// </summary>
 	public class SolutionProject : IProject
     {
+        private readonly ICollection<ConfigurationPlatform> _configurationPlatforms =
+            new Collection<ConfigurationPlatform>();
+
 		/// <summary>
 		///		Creates a new instance of <see cref="SolutionProject"/>
 		/// </summary>
@@ -28,7 +34,7 @@ namespace SlnParser.Contracts
 			TypeGuid = typeGuid;
 			Type = type;
 			File = fileInfo;
-		}
+        }
 
 		/// <inheritdoc/>
 		public Guid Id { get; }
@@ -46,5 +52,18 @@ namespace SlnParser.Contracts
 		///		The File of the Project
 		/// </summary>
 		public FileInfo File { get; }
+
+        /// <summary>
+        ///     The <see cref="ConfigurationPlatform"/>s configured for this solution
+        /// </summary>
+        public IReadOnlyCollection<ConfigurationPlatform> ConfigurationPlatforms =>
+            _configurationPlatforms.ToList().AsReadOnly();
+
+        internal void AddConfigurationPlatform(ConfigurationPlatform configurationPlatform)
+        {
+            if (configurationPlatform == null) throw new ArgumentNullException(nameof(configurationPlatform));
+            
+            _configurationPlatforms.Add(configurationPlatform);
+        }
     }
 }

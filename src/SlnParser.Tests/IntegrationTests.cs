@@ -211,6 +211,14 @@ namespace SlnParser.Tests
 				.Should()
 				.Be(ProjectType.CSharpClassLibrary);
 
+            solution
+                .AllProjects
+                .ElementAt(0)
+                .As<SolutionProject>()
+                .ConfigurationPlatforms
+                .Should()
+                .Contain(config => config.Name.Equals("Debug|Any CPU.ActiveCfg"));
+
 			// 2. Project - Solution Folder
 			solution
 				.AllProjects
@@ -263,6 +271,14 @@ namespace SlnParser.Tests
 				.Type
 				.Should()
 				.Be(ProjectType.CSharpClassLibrary);
+            
+            solution
+                .AllProjects
+                .ElementAt(2)
+                .As<SolutionProject>()
+                .ConfigurationPlatforms
+                .Should()
+                .Contain(config => config.Name.Equals("Debug|x86.Build.0"));
 		}
 
 		[Fact]
