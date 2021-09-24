@@ -35,8 +35,12 @@ namespace SlnParser.Helper
 		private IEnumerable<IProject> GetProjectsFlat(Solution solution, IEnumerable<string> fileContents)
 		{
 			var flatProjects = new Collection<IProject>();
-			foreach (var line in fileContents)
-				ProcessLine(solution, line, flatProjects);
+            foreach (var line in fileContents)
+            {
+                if (!TryProcessLine(solution, line, out var project)) continue;
+                
+                flatProjects.Add(project);
+            }
 			
 			return flatProjects;
 		}
@@ -53,17 +57,19 @@ namespace SlnParser.Helper
 			return structuredProjects;
 		}
 
-		private void ProcessLine(
+		private bool TryProcessLine(
             Solution solution, 
             string line, 
-            ICollection<IProject> flatProjectList)
-		{
-			if (!line.StartsWith("Project(\"{")) return;
+            out IProject project)
+        {
+            project = null;
+            
+			if (!line.StartsWith("Project(\"{")) return false;
 
 			// c.f.: https://regexr.com/650df
 			const string pattern = @"Project\(""\{(?<projectTypeGuid>[A-Za-z0-9\-]+)\}""\) = ""(?<projectName>.+)"", ""(?<projectPath>.+)"", ""\{(?<projectGuid>[A-Za-z0-9\-]+)\}";
 			var match = Regex.Match(line, pattern);
-			if (!match.Success) return;
+			if (!match.Success) return false;
 
 			var projectTypeGuidString = match.Groups["projectTypeGuid"].Value;
 			var projectName = match.Groups["projectName"].Value;
@@ -82,23 +88,22 @@ namespace SlnParser.Helper
 
 			var projectType = _projectTypeMapper.Map(projectTypeGuid);
 
-			IProject project;
-			if (projectType == ProjectType.SolutionFolder)
-				project = new SolutionFolder(
-					projectGuid,
-					projectName,
-					projectTypeGuid,
-					projectType);
-			else
-				project = new SolutionProject(
-					projectGuid,
-					projectName,
-					projectTypeGuid,
-					projectType,
-					projectFile);
+            project = projectType == ProjectType.SolutionFolder
+                ? (IProject) new SolutionFolder(
+                    projectGuid,
+                    projectName,
+                    projectTypeGuid,
+                    projectType)
 
-			flatProjectList.Add(project);
-		}
+                : new SolutionProject(
+                    projectGuid,
+                    projectName,
+                    projectTypeGuid,
+                    projectType,
+                    projectFile);
+
+            return true;
+        }
 
 		private static IEnumerable<NestedProjectMapping> GetGlobalSectionForNestedProjects(IEnumerable<string> fileContents)
 		{
