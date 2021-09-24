@@ -103,7 +103,7 @@ public class Build : NukeBuild
         {
             const string nugetSource = "https://api.nuget.org/v3/index.json";
 
-            var packages = (BuildDirectory / ".output/Packages").GlobFiles("*.nupkg", "*.snupkg");
+            var packages = (BuildDirectory / ".output/Packages").GlobFiles("*.nupkg");
 
             foreach (var package in packages)
             {
