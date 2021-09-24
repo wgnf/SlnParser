@@ -25,18 +25,18 @@ namespace SlnParser.Helper
 			if (fileContents == null) throw new ArgumentNullException(nameof(fileContents));
 
 			var fileContentsList = fileContents.ToList();
-			var flatProjects = GetProjectsFlat(fileContentsList).ToList();
+			var flatProjects = GetProjectsFlat(solution, fileContentsList).ToList();
 			solution.AllProjects = flatProjects.ToList().AsReadOnly();
 
 			var structuredProjects = GetProjectsStructured(fileContentsList, flatProjects);
 			solution.Projects = structuredProjects.ToList().AsReadOnly();
 		}
 
-		private IEnumerable<IProject> GetProjectsFlat(IEnumerable<string> fileContents)
+		private IEnumerable<IProject> GetProjectsFlat(Solution solution, IEnumerable<string> fileContents)
 		{
 			var flatProjects = new Collection<IProject>();
 			foreach (var line in fileContents)
-				ProcessLine(line, flatProjects);
+				ProcessLine(solution, line, flatProjects);
 			
 			return flatProjects;
 		}
@@ -53,7 +53,10 @@ namespace SlnParser.Helper
 			return structuredProjects;
 		}
 
-		private void ProcessLine(string line, ICollection<IProject> flatProjectList)
+		private void ProcessLine(
+            Solution solution, 
+            string line, 
+            ICollection<IProject> flatProjectList)
 		{
 			if (!line.StartsWith("Project(\"{")) return;
 
@@ -69,7 +72,13 @@ namespace SlnParser.Helper
 
 			var projectTypeGuid = Guid.Parse(projectTypeGuidString);
 			var projectGuid = Guid.Parse(projectGuidString);
-			var projectFile = new FileInfo(projectPath);
+
+            var solutionDirectory = Path.GetDirectoryName(solution.File.FullName);
+            if (solutionDirectory == null)
+                throw new UnexpectedSolutionStructureException("Solution-Directory could not be determined");
+            
+            var projectFileCombinedWithSolution = Path.Combine(solutionDirectory, projectPath);
+			var projectFile = new FileInfo(projectFileCombinedWithSolution);
 
 			var projectType = _projectTypeMapper.Map(projectTypeGuid);
 
