@@ -299,7 +299,33 @@ namespace SlnParser.Tests
 				.Projects
 				.Should()
 				.HaveCount(4);
-		}
+
+            var firstSolutionFolder = solution
+                .AllProjects
+                .OfType<SolutionFolder>()
+                .FirstOrDefault(folder => folder.Name == "SolutionFolder1");
+            
+            Assert.NotNull(firstSolutionFolder);
+
+            firstSolutionFolder
+                .Files
+                .Should()
+                .Contain(file => file.Name == "something.txt" ||
+                                 file.Name == "test123.txt" ||
+                                 file.Name == "test456.txt");
+
+            var nestedSolutionFolder = solution
+                .AllProjects
+                .OfType<SolutionFolder>()
+                .FirstOrDefault(folder => folder.Name == "NestedSolutionFolder");
+            
+            Assert.NotNull(nestedSolutionFolder);
+
+            nestedSolutionFolder
+                .Files
+                .Should()
+                .Contain(file => file.Name == "testNested1.txt");
+        }
 
 		private static FileInfo LoadSolution(string solutionName)
 		{

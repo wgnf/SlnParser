@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 
 namespace SlnParser.Contracts
@@ -11,7 +12,8 @@ namespace SlnParser.Contracts
 	public class SolutionFolder : IProject
 	{
 		private readonly ICollection<IProject> _projects = new Collection<IProject>();
-		
+        private readonly ICollection<FileInfo> _files = new Collection<FileInfo>();
+
 		/// <summary>
 		///		Creates a new instance of <see cref="SolutionFolder"/>
 		/// </summary>
@@ -48,9 +50,19 @@ namespace SlnParser.Contracts
 		/// </summary>
 		public IReadOnlyCollection<IProject> Projects => _projects.ToList().AsReadOnly();
 
+        /// <summary>
+        ///     The contained <see cref="FileInfo"/>s in the Solution Folder
+        /// </summary>
+        public IReadOnlyCollection<FileInfo> Files => _files.ToList().AsReadOnly();
+
 		internal void AddProject(IProject project)
 		{
 			_projects.Add(project);
 		}
+
+        internal void AddFile(FileInfo fileInfo)
+        {
+            _files.Add(fileInfo);
+        }
 	}
 }

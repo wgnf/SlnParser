@@ -11,6 +11,9 @@ ProjectSection(SolutionItems) = preProject
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NestedSolutionFolder", "NestedSolutionFolder", "{DA01EB1C-A2F7-4851-AD58-D1319B29EE3D}"
+ProjectSection(SolutionItems) = preProject
+	testNested1.txt = testNested1.txt
+EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassLibraryInSolutionFolder1", "ClassLibraryInSolutionFolder1\ClassLibraryInSolutionFolder1.csproj", "{298A6739-2859-4A48-9EB7-55EDD65F4F65}"
 EndProject

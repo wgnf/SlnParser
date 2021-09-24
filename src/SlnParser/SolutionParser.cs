@@ -27,7 +27,8 @@ namespace SlnParser
                  * NOTE: It's important that this happens _after_ the 'EnrichSolutionWithProjects',
                  * because we need the parsed projects before we can map the configurations to them
                  */
-                new EnrichSolutionWithProjectConfigurationPlatforms()
+                new EnrichSolutionWithProjectConfigurationPlatforms(),
+                new EnrichSolutionWithSolutionFolderFiles()
             };
         }
 	    
