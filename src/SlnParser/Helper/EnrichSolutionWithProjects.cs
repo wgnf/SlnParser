@@ -4,7 +4,6 @@ using SlnParser.Contracts.Helper;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -12,12 +11,12 @@ namespace SlnParser.Helper
 {
 	internal sealed class EnrichSolutionWithProjects : IEnrichSolution
 	{
-		private readonly IProjectTypeMapper _projectTypeMapper;
+        private readonly IParseProjectDefinition _parseProjectDefinition;
 		
 		public EnrichSolutionWithProjects()
 		{
-			_projectTypeMapper = new ProjectTypeMapper();
-		}
+            _parseProjectDefinition = new ProjectDefinitionParser();
+        }
 		
 		public void Enrich(Solution solution, IEnumerable<string> fileContents)
 		{
@@ -37,8 +36,7 @@ namespace SlnParser.Helper
 			var flatProjects = new Collection<IProject>();
             foreach (var line in fileContents)
             {
-                if (!TryProcessLine(solution, line, out var project)) continue;
-                
+                if (!_parseProjectDefinition.TryParseProjectDefinition(solution, line, out var project)) continue;
                 flatProjects.Add(project);
             }
 			
@@ -57,55 +55,7 @@ namespace SlnParser.Helper
 			return structuredProjects;
 		}
 
-		private bool TryProcessLine(
-            Solution solution, 
-            string line, 
-            out IProject project)
-        {
-            project = null;
-            
-			if (!line.StartsWith("Project(\"{")) return false;
-
-			// c.f.: https://regexr.com/650df
-			const string pattern = @"Project\(""\{(?<projectTypeGuid>[A-Za-z0-9\-]+)\}""\) = ""(?<projectName>.+)"", ""(?<projectPath>.+)"", ""\{(?<projectGuid>[A-Za-z0-9\-]+)\}";
-			var match = Regex.Match(line, pattern);
-			if (!match.Success) return false;
-
-			var projectTypeGuidString = match.Groups["projectTypeGuid"].Value;
-			var projectName = match.Groups["projectName"].Value;
-			var projectPath = match.Groups["projectPath"].Value;
-			var projectGuidString = match.Groups["projectGuid"].Value;
-
-			var projectTypeGuid = Guid.Parse(projectTypeGuidString);
-			var projectGuid = Guid.Parse(projectGuidString);
-
-            var solutionDirectory = Path.GetDirectoryName(solution.File.FullName);
-            if (solutionDirectory == null)
-                throw new UnexpectedSolutionStructureException("Solution-Directory could not be determined");
-            
-            var projectFileCombinedWithSolution = Path.Combine(solutionDirectory, projectPath);
-			var projectFile = new FileInfo(projectFileCombinedWithSolution);
-
-			var projectType = _projectTypeMapper.Map(projectTypeGuid);
-
-            project = projectType == ProjectType.SolutionFolder
-                ? (IProject) new SolutionFolder(
-                    projectGuid,
-                    projectName,
-                    projectTypeGuid,
-                    projectType)
-
-                : new SolutionProject(
-                    projectGuid,
-                    projectName,
-                    projectTypeGuid,
-                    projectType,
-                    projectFile);
-
-            return true;
-        }
-
-		private static IEnumerable<NestedProjectMapping> GetGlobalSectionForNestedProjects(IEnumerable<string> fileContents)
+        private static IEnumerable<NestedProjectMapping> GetGlobalSectionForNestedProjects(IEnumerable<string> fileContents)
 		{
 			const string startNestedProjects = "GlobalSection(NestedProjects";
 			const string endNestedProjects = "EndGlobalSection";
