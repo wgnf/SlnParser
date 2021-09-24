@@ -14,16 +14,14 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 [ShutdownDotNetAfterServerBuild]
 public class Build : NukeBuild
 {
-    public static int Main() => Execute<Build>(x => x.Test);
-
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
-    [Solution] readonly Solution Solution;
     [GitVersion] readonly GitVersion GitVersion;
 
-    [Parameter("NuGet API Key", Name = "NUGET_API_KEY")]
-    readonly string NuGetApiKey;
+    [Parameter("NuGet API Key", Name = "NUGET_API_KEY")] readonly string NuGetApiKey;
+
+    [Solution] readonly Solution Solution;
 
     AbsolutePath SourceDirectory => RootDirectory / "src";
 
@@ -50,7 +48,8 @@ public class Build : NukeBuild
         .Executes(() =>
         {
             if (GitVersion == null)
-                Logger.Warn("GitVersion appears to be null. Have a look at it! Versions are defaulting to 0.1.0 for now...");
+                Logger.Warn(
+                    "GitVersion appears to be null. Have a look at it! Versions are defaulting to 0.1.0 for now...");
 
             DotNetBuild(s => s
                 .SetProjectFile(Solution)
@@ -100,7 +99,6 @@ public class Build : NukeBuild
     Target Publish => _ => _
         .DependsOn(Pack)
         .Requires(() => !string.IsNullOrWhiteSpace(NuGetApiKey))
-
         .Executes(() =>
         {
             const string nugetSource = "https://api.nuget.org/v3/index.json";
@@ -118,4 +116,6 @@ public class Build : NukeBuild
                     .SetSymbolSource(nugetSource));
             }
         });
+
+    public static int Main() => Execute<Build>(x => x.Test);
 }

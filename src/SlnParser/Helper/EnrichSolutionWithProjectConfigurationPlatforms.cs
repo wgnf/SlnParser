@@ -9,12 +9,12 @@ namespace SlnParser.Helper
     internal sealed class EnrichSolutionWithProjectConfigurationPlatforms : IEnrichSolution
     {
         private readonly IParseSolutionConfigurationPlatform _parseSolutionConfigurationPlatform;
-        
+
         public EnrichSolutionWithProjectConfigurationPlatforms()
         {
             _parseSolutionConfigurationPlatform = new SolutionConfigurationPlatformParser();
         }
-        
+
         public void Enrich(Solution solution, IEnumerable<string> fileContents)
         {
             var projectConfigurations = _parseSolutionConfigurationPlatform.Parse(
@@ -24,7 +24,7 @@ namespace SlnParser.Helper
         }
 
         private static void MapConfigurationPlatformsToProjects(
-            Solution solution, 
+            Solution solution,
             IEnumerable<ProjectConfigurationPlatform> projectConfigurations)
         {
             foreach (var configuration in projectConfigurations)
@@ -32,14 +32,14 @@ namespace SlnParser.Helper
         }
 
         private static void MapConfigurationPlatformToProject(
-            Solution solution, 
+            Solution solution,
             ProjectConfigurationPlatform configuration)
         {
             if (!configuration.ProjectId.HasValue)
                 throw new UnexpectedSolutionStructureException(
                     "Expected to find a project-id " +
                     $"for the Project-Platform-Configuration '{configuration.ConfigurationPlatform.Name}'");
-            
+
             var project = solution
                 .AllProjects
                 .FirstOrDefault(project => project.Id == configuration.ProjectId.Value);
@@ -56,7 +56,7 @@ namespace SlnParser.Helper
                     $"'{configuration.ProjectId.Value}' for the Project-Platform-Configuration " +
                     $"'{configuration.ConfigurationPlatform.Name}' but found " +
                     $" project of type '{project.GetType().Name}' instead");
-            
+
             solutionProject.AddConfigurationPlatform(configuration.ConfigurationPlatform);
         }
     }

@@ -9,41 +9,41 @@ namespace SlnParser.Tests
 {
     public class IntegrationTests
     {
-		[Fact]
-		[Category("ParseSolution:SlnParser")]
-		public void Should_Be_Able_To_Parse_SlnParser_Solution_Correctly()
-		{
-			var solutionFile = LoadSolution("SlnParser");
-			var sut = new SolutionParser();
+        [Fact]
+        [Category("ParseSolution:SlnParser")]
+        public void Should_Be_Able_To_Parse_SlnParser_Solution_Correctly()
+        {
+            var solutionFile = LoadSolution("SlnParser");
+            var sut = new SolutionParser();
 
-			var solution = sut.Parse(solutionFile);
+            var solution = sut.Parse(solutionFile);
 
-			solution
-				.Name
-				.Should()
-				.Be("SlnParser");
-			solution
-				.File
-				.FullName
-				.Should()
-				.Contain(@"Solutions\SlnParser.sln");
+            solution
+                .Name
+                .Should()
+                .Be("SlnParser");
+            solution
+                .File
+                .FullName
+                .Should()
+                .Contain(@"Solutions\SlnParser.sln");
 
-			solution
-				.FileFormatVersion
-				.Should()
-				.Be("12.00");
+            solution
+                .FileFormatVersion
+                .Should()
+                .Be("12.00");
 
-			solution
-				.VisualStudioVersion
-				.Version
-				.Should()
-				.Be("17.0.31410.414");
+            solution
+                .VisualStudioVersion
+                .Version
+                .Should()
+                .Be("17.0.31410.414");
 
-			solution
-				.VisualStudioVersion
-				.MinimumVersion
-				.Should()
-				.Be("10.0.40219.1");
+            solution
+                .VisualStudioVersion
+                .MinimumVersion
+                .Should()
+                .Be("10.0.40219.1");
 
             // -- Solution Configuration Platforms
 
@@ -93,7 +93,7 @@ namespace SlnParser.Tests
                 .Platform
                 .Should()
                 .Be(BuildPlatform.X64);
-            
+
             solution
                 .ConfigurationPlatforms
                 .ElementAt(2)
@@ -114,7 +114,7 @@ namespace SlnParser.Tests
                 .Platform
                 .Should()
                 .Be(BuildPlatform.X86);
-            
+
             solution
                 .ConfigurationPlatforms
                 .ElementAt(3)
@@ -135,7 +135,7 @@ namespace SlnParser.Tests
                 .Platform
                 .Should()
                 .Be(BuildPlatform.AnyCpu);
-            
+
             solution
                 .ConfigurationPlatforms
                 .ElementAt(4)
@@ -156,7 +156,7 @@ namespace SlnParser.Tests
                 .Platform
                 .Should()
                 .Be(BuildPlatform.X64);
-            
+
             solution
                 .ConfigurationPlatforms
                 .ElementAt(5)
@@ -179,37 +179,37 @@ namespace SlnParser.Tests
                 .Be(BuildPlatform.X86);
 
             // -- Projects
-			solution
-				.AllProjects
-				.Should()
-				.HaveCount(3);
+            solution
+                .AllProjects
+                .Should()
+                .HaveCount(3);
 
-			// 1. Project - ClassLib
-			solution
-				.AllProjects
-				.ElementAt(0)
-				.Should()
-				.BeOfType<SolutionProject>();
-			solution
-				.AllProjects
-				.ElementAt(0)
-				.Name
-				.Should()
-				.Be("SlnParser");
-			solution
-				.AllProjects
-				.ElementAt(0)
-				.As<SolutionProject>()
-				.File
-				.FullName
-				.Should()
-				.Contain(@"SlnParser\SlnParser.csproj");
-			solution
-				.AllProjects
-				.ElementAt(0)
-				.Type
-				.Should()
-				.Be(ProjectType.CSharpClassLibrary);
+            // 1. Project - ClassLib
+            solution
+                .AllProjects
+                .ElementAt(0)
+                .Should()
+                .BeOfType<SolutionProject>();
+            solution
+                .AllProjects
+                .ElementAt(0)
+                .Name
+                .Should()
+                .Be("SlnParser");
+            solution
+                .AllProjects
+                .ElementAt(0)
+                .As<SolutionProject>()
+                .File
+                .FullName
+                .Should()
+                .Contain(@"SlnParser\SlnParser.csproj");
+            solution
+                .AllProjects
+                .ElementAt(0)
+                .Type
+                .Should()
+                .Be(ProjectType.CSharpClassLibrary);
 
             solution
                 .AllProjects
@@ -219,59 +219,59 @@ namespace SlnParser.Tests
                 .Should()
                 .Contain(config => config.Name.Equals("Debug|Any CPU.ActiveCfg"));
 
-			// 2. Project - Solution Folder
-			solution
-				.AllProjects
-				.ElementAt(1)
-				.Should()
-				.BeOfType<SolutionFolder>();
-			solution
-				.AllProjects
-				.ElementAt(1)
-				.Name
-				.Should()
-				.Be("Solution Items");
-			solution
-				.AllProjects
-				.ElementAt(1)
-				.As<SolutionFolder>()
-				.Projects
-				.Should()
-				.BeEmpty();
-			solution
-				.AllProjects
-				.ElementAt(1)
-				.Type
-				.Should()
-				.Be(ProjectType.SolutionFolder);
+            // 2. Project - Solution Folder
+            solution
+                .AllProjects
+                .ElementAt(1)
+                .Should()
+                .BeOfType<SolutionFolder>();
+            solution
+                .AllProjects
+                .ElementAt(1)
+                .Name
+                .Should()
+                .Be("Solution Items");
+            solution
+                .AllProjects
+                .ElementAt(1)
+                .As<SolutionFolder>()
+                .Projects
+                .Should()
+                .BeEmpty();
+            solution
+                .AllProjects
+                .ElementAt(1)
+                .Type
+                .Should()
+                .Be(ProjectType.SolutionFolder);
 
-			// 3. Project - Test Project
-			solution
-				.AllProjects
-				.ElementAt(2)
-				.Should()
-				.BeOfType<SolutionProject>();
-			solution
-				.AllProjects
-				.ElementAt(2)
-				.Name
-				.Should()
-				.Be("SlnParser.Tests");
-			solution
-				.AllProjects
-				.ElementAt(2)
-				.As<SolutionProject>()
-				.File
-				.FullName
-				.Should()
-				.Contain(@"SlnParser.Tests\SlnParser.Tests.csproj");
-			solution
-				.AllProjects
-				.ElementAt(2)
-				.Type
-				.Should()
-				.Be(ProjectType.CSharpClassLibrary);
-            
+            // 3. Project - Test Project
+            solution
+                .AllProjects
+                .ElementAt(2)
+                .Should()
+                .BeOfType<SolutionProject>();
+            solution
+                .AllProjects
+                .ElementAt(2)
+                .Name
+                .Should()
+                .Be("SlnParser.Tests");
+            solution
+                .AllProjects
+                .ElementAt(2)
+                .As<SolutionProject>()
+                .File
+                .FullName
+                .Should()
+                .Contain(@"SlnParser.Tests\SlnParser.Tests.csproj");
+            solution
+                .AllProjects
+                .ElementAt(2)
+                .Type
+                .Should()
+                .Be(ProjectType.CSharpClassLibrary);
+
             solution
                 .AllProjects
                 .ElementAt(2)
@@ -279,32 +279,32 @@ namespace SlnParser.Tests
                 .ConfigurationPlatforms
                 .Should()
                 .Contain(config => config.Name.Equals("Debug|x86.Build.0"));
-		}
+        }
 
-		[Fact]
-		[Category("ParseSolution:TestSln")]
-		public void Should_Be_Able_To_Parse_TestSln_Solution_Correctly()
-		{
-			var solutionFile = LoadSolution("TestSln");
-			var sut = new SolutionParser();
-			
-			var solution = sut.Parse(solutionFile);
+        [Fact]
+        [Category("ParseSolution:TestSln")]
+        public void Should_Be_Able_To_Parse_TestSln_Solution_Correctly()
+        {
+            var solutionFile = LoadSolution("TestSln");
+            var sut = new SolutionParser();
 
-			solution
-				.AllProjects
-				.Should()
-				.HaveCount(8);
+            var solution = sut.Parse(solutionFile);
 
-			solution
-				.Projects
-				.Should()
-				.HaveCount(4);
+            solution
+                .AllProjects
+                .Should()
+                .HaveCount(8);
+
+            solution
+                .Projects
+                .Should()
+                .HaveCount(4);
 
             var firstSolutionFolder = solution
                 .AllProjects
                 .OfType<SolutionFolder>()
                 .FirstOrDefault(folder => folder.Name == "SolutionFolder1");
-            
+
             Assert.NotNull(firstSolutionFolder);
 
             firstSolutionFolder
@@ -318,7 +318,7 @@ namespace SlnParser.Tests
                 .AllProjects
                 .OfType<SolutionFolder>()
                 .FirstOrDefault(folder => folder.Name == "NestedSolutionFolder");
-            
+
             Assert.NotNull(nestedSolutionFolder);
 
             nestedSolutionFolder
@@ -327,15 +327,15 @@ namespace SlnParser.Tests
                 .Contain(file => file.Name == "testNested1.txt");
         }
 
-		private static FileInfo LoadSolution(string solutionName)
-		{
-			var solutionFileName = $"./Solutions/{solutionName}.sln";
-			var solutionFile = new FileInfo(solutionFileName);
+        private static FileInfo LoadSolution(string solutionName)
+        {
+            var solutionFileName = $"./Solutions/{solutionName}.sln";
+            var solutionFile = new FileInfo(solutionFileName);
 
-			if (!solutionFile.Exists)
-				throw new FileNotFoundException();
+            if (!solutionFile.Exists)
+                throw new FileNotFoundException();
 
-			return solutionFile;
-		}
+            return solutionFile;
+        }
     }
 }

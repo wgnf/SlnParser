@@ -2,8 +2,8 @@
 
 namespace SlnParser.Contracts.Helper
 {
-	internal interface IEnrichSolution
-	{
-		void Enrich(Solution solution, IEnumerable<string> fileContents);
-	}
+    internal interface IEnrichSolution
+    {
+        void Enrich(Solution solution, IEnumerable<string> fileContents);
+    }
 }

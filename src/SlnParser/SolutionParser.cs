@@ -9,19 +9,19 @@ using System.Linq;
 
 namespace SlnParser
 {
-	/// <inheritdoc/>
+    /// <inheritdoc />
     public sealed class SolutionParser : ISolutionParser
     {
         private readonly IEnumerable<IEnrichSolution> _solutionEnrichers;
 
-	    /// <summary>
-	    ///		Creates a new instance of <see cref="SolutionParser"/>
-	    /// </summary>
-	    public SolutionParser()
+        /// <summary>
+        ///     Creates a new instance of <see cref="SolutionParser" />
+        /// </summary>
+        public SolutionParser()
         {
             _solutionEnrichers = new List<IEnrichSolution>
             {
-                new EnrichSolutionWithProjects(), 
+                new EnrichSolutionWithProjects(),
                 new EnrichSolutionWithSolutionConfigurationPlatforms(),
                 /*
                  * NOTE: It's important that this happens _after_ the 'EnrichSolutionWithProjects',
@@ -31,26 +31,27 @@ namespace SlnParser
                 new EnrichSolutionWithSolutionFolderFiles()
             };
         }
-	    
-		/// <inheritdoc/>
-		public Solution Parse(string solutionFileName)
+
+        /// <inheritdoc />
+        public Solution Parse(string solutionFileName)
         {
             if (string.IsNullOrWhiteSpace(solutionFileName))
-                throw new ArgumentException($"'{nameof(solutionFileName)}' cannot be null or whitespace.", nameof(solutionFileName));
+                throw new ArgumentException($"'{nameof(solutionFileName)}' cannot be null or whitespace.",
+                    nameof(solutionFileName));
 
             var solutionFile = new FileInfo(solutionFileName);
             return Parse(solutionFile);
         }
 
-		/// <inheritdoc/>
-		public Solution Parse(FileInfo solutionFile)
+        /// <inheritdoc />
+        public Solution Parse(FileInfo solutionFile)
         {
             if (solutionFile is null)
                 throw new ArgumentNullException(nameof(solutionFile));
             if (!solutionFile.Exists)
                 throw new FileNotFoundException("Provided Solution-File does not exist", solutionFile.FullName);
-			if (!solutionFile.Extension.Equals(".sln"))
-				throw new InvalidDataException("The provided file is not a solution file!");
+            if (!solutionFile.Extension.Equals(".sln"))
+                throw new InvalidDataException("The provided file is not a solution file!");
 
             try
             {
@@ -63,18 +64,19 @@ namespace SlnParser
             }
         }
 
-		/// <inheritdoc/>
-		public bool TryParse(string solutionFileName, out Solution solution)
+        /// <inheritdoc />
+        public bool TryParse(string solutionFileName, out Solution solution)
         {
             if (string.IsNullOrWhiteSpace(solutionFileName))
-                throw new ArgumentException($"'{nameof(solutionFileName)}' cannot be null or whitespace.", nameof(solutionFileName));
+                throw new ArgumentException($"'{nameof(solutionFileName)}' cannot be null or whitespace.",
+                    nameof(solutionFileName));
 
             var solutionFile = new FileInfo(solutionFileName);
             return TryParse(solutionFile, out solution);
         }
 
-		/// <inheritdoc/>
-		public bool TryParse(FileInfo solutionFile, out Solution solution)
+        /// <inheritdoc />
+        public bool TryParse(FileInfo solutionFile, out Solution solution)
         {
             if (solutionFile is null)
                 throw new ArgumentNullException(nameof(solutionFile));
@@ -95,15 +97,14 @@ namespace SlnParser
         {
             var solution = new Solution
             {
-                Name = Path.GetFileNameWithoutExtension(solutionFile.FullName),
-                File = solutionFile
+                Name = Path.GetFileNameWithoutExtension(solutionFile.FullName), File = solutionFile
             };
             var allLines = File.ReadAllLines(solutionFile.FullName);
             var allLinesTrimmed = allLines
                 .Select(line => line.Trim())
                 .Where(line => line.Length > 0)
                 .ToList();
-            
+
             foreach (var enricher in _solutionEnrichers)
                 enricher.Enrich(solution, allLinesTrimmed);
 
@@ -115,43 +116,43 @@ namespace SlnParser
 
         private static void ProcessLine(string line, Solution solution)
         {
-			ProcessSolutionFileFormatVersion(line, solution);
-			ProcessVisualStudioVersion(line, solution);
-			ProcessMinimumVisualStudioVersion(line, solution);
+            ProcessSolutionFileFormatVersion(line, solution);
+            ProcessVisualStudioVersion(line, solution);
+            ProcessMinimumVisualStudioVersion(line, solution);
         }
 
-		private static void ProcessSolutionFileFormatVersion(string line, Solution solution)
-		{
-			if (!line.StartsWith("Microsoft Visual Studio Solution File, ")) return;
+        private static void ProcessSolutionFileFormatVersion(string line, Solution solution)
+        {
+            if (!line.StartsWith("Microsoft Visual Studio Solution File, ")) return;
 
-			/*
-			 * 54 characters, because...
-			 * "Microsoft Visual Studio Solution File, Format Version " is 54 characters long
-			*/
-			var fileFormatVersion = string.Concat(line.Skip(54));
-			solution.FileFormatVersion = fileFormatVersion;
-		}
+            /*
+             * 54 characters, because...
+             * "Microsoft Visual Studio Solution File, Format Version " is 54 characters long
+            */
+            var fileFormatVersion = string.Concat(line.Skip(54));
+            solution.FileFormatVersion = fileFormatVersion;
+        }
 
-		private static void ProcessVisualStudioVersion(string line, Solution solution)
-		{
-			if (!line.StartsWith("VisualStudioVersion = ")) return;
+        private static void ProcessVisualStudioVersion(string line, Solution solution)
+        {
+            if (!line.StartsWith("VisualStudioVersion = ")) return;
 
-			// because "VisualStudioVersion = " is 22 characters long
-			var visualStudioVersion = string.Concat(line.Skip(22));
+            // because "VisualStudioVersion = " is 22 characters long
+            var visualStudioVersion = string.Concat(line.Skip(22));
 
-			solution.VisualStudioVersion ??= new VisualStudioVersion();
-			solution.VisualStudioVersion.Version = visualStudioVersion;
-		}
+            solution.VisualStudioVersion ??= new VisualStudioVersion();
+            solution.VisualStudioVersion.Version = visualStudioVersion;
+        }
 
-		private static void ProcessMinimumVisualStudioVersion(string line, Solution solution)
-		{
-			if (!line.StartsWith("MinimumVisualStudioVersion = ")) return;
+        private static void ProcessMinimumVisualStudioVersion(string line, Solution solution)
+        {
+            if (!line.StartsWith("MinimumVisualStudioVersion = ")) return;
 
-			// because "MinimumVisualStudioVersion = " is 29 characters long
-			var minimumVisualStudioVersion = string.Concat(line.Skip(29));
+            // because "MinimumVisualStudioVersion = " is 29 characters long
+            var minimumVisualStudioVersion = string.Concat(line.Skip(29));
 
-			solution.VisualStudioVersion ??= new VisualStudioVersion();
-			solution.VisualStudioVersion.MinimumVersion = minimumVisualStudioVersion;
-		}
+            solution.VisualStudioVersion ??= new VisualStudioVersion();
+            solution.VisualStudioVersion.MinimumVersion = minimumVisualStudioVersion;
+        }
     }
 }

@@ -2,18 +2,18 @@
 
 namespace SlnParser.Contracts.Helper
 {
-	internal class NestedProjectMapping
-	{
-		public NestedProjectMapping(
-			string targetId,
-			string destinationId)
-		{
-			TargetId = new Guid(targetId);
-			DestinationId = new Guid(destinationId);
-		}
-		
-		public Guid TargetId { get; set; }
+    internal class NestedProjectMapping
+    {
+        public NestedProjectMapping(
+            string targetId,
+            string destinationId)
+        {
+            TargetId = new Guid(targetId);
+            DestinationId = new Guid(destinationId);
+        }
 
-		public Guid DestinationId { get; set; }
-	}
+        public Guid TargetId { get; set; }
+
+        public Guid DestinationId { get; set; }
+    }
 }

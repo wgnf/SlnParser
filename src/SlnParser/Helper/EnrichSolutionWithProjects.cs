@@ -9,121 +9,123 @@ using System.Text.RegularExpressions;
 
 namespace SlnParser.Helper
 {
-	internal sealed class EnrichSolutionWithProjects : IEnrichSolution
-	{
+    internal sealed class EnrichSolutionWithProjects : IEnrichSolution
+    {
         private readonly IParseProjectDefinition _parseProjectDefinition;
-		
-		public EnrichSolutionWithProjects()
-		{
+
+        public EnrichSolutionWithProjects()
+        {
             _parseProjectDefinition = new ProjectDefinitionParser();
         }
-		
-		public void Enrich(Solution solution, IEnumerable<string> fileContents)
-		{
-			if (solution == null) throw new ArgumentNullException(nameof(solution));
-			if (fileContents == null) throw new ArgumentNullException(nameof(fileContents));
 
-			var fileContentsList = fileContents.ToList();
-			var flatProjects = GetProjectsFlat(solution, fileContentsList).ToList();
-			solution.AllProjects = flatProjects.ToList().AsReadOnly();
+        public void Enrich(Solution solution, IEnumerable<string> fileContents)
+        {
+            if (solution == null) throw new ArgumentNullException(nameof(solution));
+            if (fileContents == null) throw new ArgumentNullException(nameof(fileContents));
 
-			var structuredProjects = GetProjectsStructured(fileContentsList, flatProjects);
-			solution.Projects = structuredProjects.ToList().AsReadOnly();
-		}
+            var fileContentsList = fileContents.ToList();
+            var flatProjects = GetProjectsFlat(solution, fileContentsList).ToList();
+            solution.AllProjects = flatProjects.ToList().AsReadOnly();
 
-		private IEnumerable<IProject> GetProjectsFlat(Solution solution, IEnumerable<string> fileContents)
-		{
-			var flatProjects = new Collection<IProject>();
+            var structuredProjects = GetProjectsStructured(fileContentsList, flatProjects);
+            solution.Projects = structuredProjects.ToList().AsReadOnly();
+        }
+
+        private IEnumerable<IProject> GetProjectsFlat(Solution solution, IEnumerable<string> fileContents)
+        {
+            var flatProjects = new Collection<IProject>();
             foreach (var line in fileContents)
             {
                 if (!_parseProjectDefinition.TryParseProjectDefinition(solution, line, out var project)) continue;
                 flatProjects.Add(project);
             }
-			
-			return flatProjects;
-		}
 
-		private static IEnumerable<IProject> GetProjectsStructured(
-			IEnumerable<string> fileContents, 
-			IEnumerable<IProject> flatProjects)
-		{
-			var structuredProjects = new Collection<IProject>();
-			var nestedProjectMappings = GetGlobalSectionForNestedProjects(fileContents).ToList();
+            return flatProjects;
+        }
 
-			ApplyProjectNesting(flatProjects, structuredProjects, nestedProjectMappings);
+        private static IEnumerable<IProject> GetProjectsStructured(
+            IEnumerable<string> fileContents,
+            IEnumerable<IProject> flatProjects)
+        {
+            var structuredProjects = new Collection<IProject>();
+            var nestedProjectMappings = GetGlobalSectionForNestedProjects(fileContents).ToList();
 
-			return structuredProjects;
-		}
+            ApplyProjectNesting(flatProjects, structuredProjects, nestedProjectMappings);
 
-        private static IEnumerable<NestedProjectMapping> GetGlobalSectionForNestedProjects(IEnumerable<string> fileContents)
-		{
-			const string startNestedProjects = "GlobalSection(NestedProjects";
-			const string endNestedProjects = "EndGlobalSection";
+            return structuredProjects;
+        }
 
-			var section = fileContents
-				.SkipWhile(line => !line.StartsWith(startNestedProjects))
-				.TakeWhile(line => !line.StartsWith(endNestedProjects))
-				.Where(line => !line.StartsWith(startNestedProjects))
-				.Where(line => !line.StartsWith(endNestedProjects))
-				.Where(line => !string.IsNullOrWhiteSpace(line));
+        private static IEnumerable<NestedProjectMapping> GetGlobalSectionForNestedProjects(
+            IEnumerable<string> fileContents)
+        {
+            const string startNestedProjects = "GlobalSection(NestedProjects";
+            const string endNestedProjects = "EndGlobalSection";
 
-			var nestedProjectMappings = new Collection<NestedProjectMapping>();
-			foreach (var nestedProject in section)
-				if (TryGetNestedProjectMapping(nestedProject, out var nestedProjectMapping))
-					nestedProjectMappings.Add(nestedProjectMapping);
+            var section = fileContents
+                .SkipWhile(line => !line.StartsWith(startNestedProjects))
+                .TakeWhile(line => !line.StartsWith(endNestedProjects))
+                .Where(line => !line.StartsWith(startNestedProjects))
+                .Where(line => !line.StartsWith(endNestedProjects))
+                .Where(line => !string.IsNullOrWhiteSpace(line));
 
-			return nestedProjectMappings;
-		}
+            var nestedProjectMappings = new Collection<NestedProjectMapping>();
+            foreach (var nestedProject in section)
+                if (TryGetNestedProjectMapping(nestedProject, out var nestedProjectMapping))
+                    nestedProjectMappings.Add(nestedProjectMapping);
 
-		private static bool TryGetNestedProjectMapping(string nestedProject, out NestedProjectMapping nestedProjectMapping)
-		{
-			// https://regexr.com/653pi
-			const string pattern = @"{(?<targetProjectId>[A-Za-z0-9\-]+)} = {(?<destinationProjectId>[A-Za-z0-9\-]+)}";
+            return nestedProjectMappings;
+        }
 
-			nestedProjectMapping = null;
-			var match = Regex.Match(nestedProject, pattern);
-			if (!match.Success) return false;
+        private static bool TryGetNestedProjectMapping(string nestedProject,
+            out NestedProjectMapping nestedProjectMapping)
+        {
+            // https://regexr.com/653pi
+            const string pattern = @"{(?<targetProjectId>[A-Za-z0-9\-]+)} = {(?<destinationProjectId>[A-Za-z0-9\-]+)}";
 
-			var targetProjectId = match.Groups["targetProjectId"].Value;
-			var destinationProject = match.Groups["destinationProjectId"].Value;
+            nestedProjectMapping = null;
+            var match = Regex.Match(nestedProject, pattern);
+            if (!match.Success) return false;
 
-			nestedProjectMapping = new NestedProjectMapping(targetProjectId, destinationProject);
-			return true;
-		}
-		
-		private static void ApplyProjectNesting(
-			IEnumerable<IProject> flatProjects, 
-			ICollection<IProject> structuredProjects, 
-			ICollection<NestedProjectMapping> nestedProjectMappings)
-		{
-			var flatProjectList = flatProjects.ToList();
-			foreach (var project in flatProjectList)
-				ApplyNestingForProject(project, flatProjectList, structuredProjects, nestedProjectMappings);
-		}
+            var targetProjectId = match.Groups["targetProjectId"].Value;
+            var destinationProject = match.Groups["destinationProjectId"].Value;
 
-		private static void ApplyNestingForProject(
-			IProject project,
-			IEnumerable<IProject> flatProjects,
-			ICollection<IProject> structuredProjects,
-			IEnumerable<NestedProjectMapping> nestedProjectMappings)
-		{
-			var mappingCandidate = nestedProjectMappings.FirstOrDefault(mapping => mapping.TargetId == project.Id);
-			if (mappingCandidate == null)
-			{
-				structuredProjects.Add(project);
-				return;
-			}
+            nestedProjectMapping = new NestedProjectMapping(targetProjectId, destinationProject);
+            return true;
+        }
 
-			var destinationCandidate = flatProjects.FirstOrDefault(proj => proj.Id == mappingCandidate.DestinationId);
-			if (destinationCandidate == null)
-				throw new UnexpectedSolutionStructureException(
-					$"Expected to find a project with id '{mappingCandidate.DestinationId}', but found none");
+        private static void ApplyProjectNesting(
+            IEnumerable<IProject> flatProjects,
+            ICollection<IProject> structuredProjects,
+            ICollection<NestedProjectMapping> nestedProjectMappings)
+        {
+            var flatProjectList = flatProjects.ToList();
+            foreach (var project in flatProjectList)
+                ApplyNestingForProject(project, flatProjectList, structuredProjects, nestedProjectMappings);
+        }
 
-			if (!(destinationCandidate is SolutionFolder solutionFolder))
-				throw new UnexpectedSolutionStructureException(
-					$"Expected project with id '{destinationCandidate.Id}' to be a Solution-Folder but found '{destinationCandidate.GetType()}'");
-			
-			solutionFolder.AddProject(project);
-		}
-	}
+        private static void ApplyNestingForProject(
+            IProject project,
+            IEnumerable<IProject> flatProjects,
+            ICollection<IProject> structuredProjects,
+            IEnumerable<NestedProjectMapping> nestedProjectMappings)
+        {
+            var mappingCandidate = nestedProjectMappings.FirstOrDefault(mapping => mapping.TargetId == project.Id);
+            if (mappingCandidate == null)
+            {
+                structuredProjects.Add(project);
+                return;
+            }
+
+            var destinationCandidate = flatProjects.FirstOrDefault(proj => proj.Id == mappingCandidate.DestinationId);
+            if (destinationCandidate == null)
+                throw new UnexpectedSolutionStructureException(
+                    $"Expected to find a project with id '{mappingCandidate.DestinationId}', but found none");
+
+            if (!(destinationCandidate is SolutionFolder solutionFolder))
+                throw new UnexpectedSolutionStructureException(
+                    $"Expected project with id '{destinationCandidate.Id}' to be a Solution-Folder but found '{destinationCandidate.GetType()}'");
+
+            solutionFolder.AddProject(project);
+        }
+    }
 }

@@ -11,9 +11,9 @@ namespace SlnParser.Helper
     internal sealed class EnrichSolutionWithSolutionFolderFiles : IEnrichSolution
     {
         private readonly IParseProjectDefinition _parseProjectDefinition;
+        private bool _inASolutionItemsSection;
 
         private SolutionFolder _solutionFolderForCurrentSection;
-        private bool _inASolutionItemsSection;
 
         public EnrichSolutionWithSolutionFolderFiles()
         {
@@ -33,7 +33,7 @@ namespace SlnParser.Helper
         {
             if (solution == null) throw new ArgumentNullException(nameof(solution));
             if (fileContents == null) throw new ArgumentNullException(nameof(fileContents));
-            
+
             foreach (var line in fileContents)
                 ProcessLine(solution, line);
         }
@@ -46,7 +46,7 @@ namespace SlnParser.Helper
                 TryGetSolutionFolder(solution, line, out _solutionFolderForCurrentSection);
                 return;
             }
-            
+
             DetermineEndProject(line);
             AddSolutionItemFile(solution, line);
             DetermineProjectItemsSection(line);
@@ -63,7 +63,7 @@ namespace SlnParser.Helper
 
             if (!(project is SolutionFolder slnFolder))
                 return;
-            
+
             var actualSolutionFolder = solution
                 .AllProjects
                 .OfType<SolutionFolder>()
@@ -73,7 +73,7 @@ namespace SlnParser.Helper
             _inASolutionItemsSection = false;
             solutionFolder = actualSolutionFolder;
         }
-        
+
         private void DetermineEndProject(string line)
         {
             if (!line.StartsWith("EndProject")) return;
@@ -85,30 +85,30 @@ namespace SlnParser.Helper
         private void DetermineProjectItemsSection(string line)
         {
             if (_inASolutionItemsSection) return;
-            
+
             _inASolutionItemsSection = line.StartsWith("ProjectSection(SolutionItems)");
         }
-        
+
         private void AddSolutionItemFile(Solution solution, string line)
         {
             if (!_inASolutionItemsSection) return;
 
             if (!TryGetSolutionItemFile(solution, line, out var solutionItemFile))
                 return;
-                
+
             _solutionFolderForCurrentSection.AddFile(solutionItemFile);
         }
-        
+
         private static bool TryGetSolutionItemFile(
-            Solution solution, 
-            string line, 
+            Solution solution,
+            string line,
             out FileInfo solutionItemFile)
         {
             solutionItemFile = null;
-            
+
             var solutionItem = line.Split('=').FirstOrDefault();
             if (solutionItem == null) return false;
-            
+
             solutionItem = solutionItem.Trim();
 
             var solutionDirectory = Path.GetDirectoryName(solution.File.FullName);

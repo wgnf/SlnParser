@@ -41,7 +41,7 @@ csharp_prefer_braces = false:suggestion
 #prefer block bodies for constructors
 csharp_style_expression_bodied_constructors = false:suggestion
 #prefer block bodies for methods
-csharp_style_expression_bodied_methods =false:suggestion
+csharp_style_expression_bodied_methods = false:suggestion
 
 #Style - Expression-level  preferences
 
@@ -67,7 +67,7 @@ dotnet_style_require_accessibility_modifiers = for_non_interface_members:suggest
 #Style - Modifier preferences
 
 #when this rule is set to a list of modifiers, prefer the specified ordering.
-csharp_preferred_modifier_order = public,internal,private,static,readonly,sealed:suggestion
+csharp_preferred_modifier_order = public, internal, private, static, readonly, sealed:suggestion
 
 #Style - qualification options
 
