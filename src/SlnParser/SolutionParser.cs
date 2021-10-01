@@ -33,7 +33,7 @@ namespace SlnParser
         }
 
         /// <inheritdoc />
-        public Solution Parse(string solutionFileName)
+        public ISolution Parse(string solutionFileName)
         {
             if (string.IsNullOrWhiteSpace(solutionFileName))
                 throw new ArgumentException($"'{nameof(solutionFileName)}' cannot be null or whitespace.",
@@ -44,7 +44,7 @@ namespace SlnParser
         }
 
         /// <inheritdoc />
-        public Solution Parse(FileInfo solutionFile)
+        public ISolution Parse(FileInfo solutionFile)
         {
             if (solutionFile is null)
                 throw new ArgumentNullException(nameof(solutionFile));
@@ -65,7 +65,7 @@ namespace SlnParser
         }
 
         /// <inheritdoc />
-        public bool TryParse(string solutionFileName, out Solution solution)
+        public bool TryParse(string solutionFileName, out ISolution solution)
         {
             if (string.IsNullOrWhiteSpace(solutionFileName))
                 throw new ArgumentException($"'{nameof(solutionFileName)}' cannot be null or whitespace.",
@@ -76,7 +76,7 @@ namespace SlnParser
         }
 
         /// <inheritdoc />
-        public bool TryParse(FileInfo solutionFile, out Solution solution)
+        public bool TryParse(FileInfo solutionFile, out ISolution solution)
         {
             if (solutionFile is null)
                 throw new ArgumentNullException(nameof(solutionFile));
@@ -93,7 +93,7 @@ namespace SlnParser
             }
         }
 
-        private Solution ParseInternal(FileInfo solutionFile)
+        private ISolution ParseInternal(FileInfo solutionFile)
         {
             var solution = new Solution
             {

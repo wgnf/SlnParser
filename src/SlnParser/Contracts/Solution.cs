@@ -3,10 +3,8 @@ using System.IO;
 
 namespace SlnParser.Contracts
 {
-    /// <summary>
-    ///     A class representing all the information contained in a Visual Studio Solution File (sln)
-    /// </summary>
-    public class Solution
+    /// <inheritdoc />
+    public class Solution : ISolution
     {
         /// <summary>
         ///     Creates a new instance of <see cref="Solution" />
@@ -16,39 +14,25 @@ namespace SlnParser.Contracts
             AllProjects = new List<IProject>();
         }
 
-        /// <summary>
-        ///     The name of the solution
-        /// </summary>
+        /// <inheritdoc />
         public string Name { get; set; }
 
-        /// <summary>
-        ///     The File of the solution
-        /// </summary>
+        /// <inheritdoc />
         public FileInfo File { get; set; }
 
-        /// <summary>
-        ///     The file format version of the solution
-        /// </summary>
+        /// <inheritdoc />
         public string FileFormatVersion { get; set; }
 
-        /// <summary>
-        ///     The <see cref="VisualStudioVersion" /> of the solution
-        /// </summary>
+        /// <inheritdoc />
         public VisualStudioVersion VisualStudioVersion { get; set; }
 
-        /// <summary>
-        ///     A flat list of all <see cref="IProject" />s contained in the solution
-        /// </summary>
+        /// <inheritdoc />
         public IReadOnlyCollection<IProject> AllProjects { get; internal set; }
 
-        /// <summary>
-        ///     A structured list of all <see cref="IProject" />s contained in the solution
-        /// </summary>
+        /// <inheritdoc />
         public IReadOnlyCollection<IProject> Projects { get; internal set; }
 
-        /// <summary>
-        ///     The <see cref="ConfigurationPlatform" />s configured for this solution
-        /// </summary>
+        /// <inheritdoc />
         public IReadOnlyCollection<ConfigurationPlatform> ConfigurationPlatforms { get; internal set; }
     }
 }
