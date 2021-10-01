@@ -15,7 +15,6 @@
         <PackageTags>.net c# solution sln parser</PackageTags>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <PackageIcon>SlnParserLogo.png</PackageIcon>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
 
         <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
 
@@ -29,7 +28,6 @@
     <ItemGroup>
         <None Include="../../res/SlnParserLogo.png" Pack="true" PackagePath="" />
         <None Include="../../LICENSE" Pack="true" PackagePath="" />
-        <None Include="../../README.md" Pack="true" PackagePath="" />
     </ItemGroup>
 
     <ItemGroup>
