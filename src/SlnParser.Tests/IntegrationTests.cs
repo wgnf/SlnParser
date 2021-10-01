@@ -209,7 +209,7 @@ namespace SlnParser.Tests
                 .ElementAt(0)
                 .Type
                 .Should()
-                .Be(ProjectType.CSharpClassLibrary);
+                .Be(ProjectType.CSharp);
 
             solution
                 .AllProjects
@@ -270,7 +270,7 @@ namespace SlnParser.Tests
                 .ElementAt(2)
                 .Type
                 .Should()
-                .Be(ProjectType.CSharpClassLibrary);
+                .Be(ProjectType.CSharp);
 
             solution
                 .AllProjects

@@ -138,7 +138,7 @@
         /// <summary>
         ///     C# Class Library
         /// </summary>
-        CSharpClassLibrary,
+        CSharp,
 
         /// <summary>
         ///     SilverLight

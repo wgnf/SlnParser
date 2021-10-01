@@ -52,7 +52,7 @@ namespace SlnParser.Helper
                 { new Guid("8BB2217D-0F2D-49D1-97BC-3654ED321F3B"), ProjectType.AspNet5 },
                 { new Guid("8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942"), ProjectType.CPlusPlus },
                 { new Guid("978C614F-708E-4E1A-B201-565925725DBA"), ProjectType.DeploymentSetup },
-                { new Guid("9A19103F-16F7-4668-BE54-9A1E7A4F7556"), ProjectType.CSharpClassLibrary },
+                { new Guid("9A19103F-16F7-4668-BE54-9A1E7A4F7556"), ProjectType.CSharp },
                 { new Guid("A1591282-1198-4647-A2B1-27E5FF5F6F3B"), ProjectType.SilverLight },
                 { new Guid("A5A43C5B-DE2A-4C0C-9213-0A381AF9435A"), ProjectType.UniversalWindowsClassLibrary },
                 { new Guid("A860303F-1F3F-4691-B57E-529FC101A107"), ProjectType.Vsta },
@@ -80,7 +80,7 @@ namespace SlnParser.Helper
                 { new Guid("F5B4F3BC-B597-4E2B-B552-EF5D8A32436F"), ProjectType.MonoTouchBinding },
                 { new Guid("F85E285D-A4E0-4152-9332-AB1D724D3325"), ProjectType.AspNetMvc2 },
                 { new Guid("F8810EC1-6754-47FC-A15F-DFABD2E3FA90"), ProjectType.SharePointWorkflow },
-                { new Guid("FAE04EC0-301F-11D3-BF4B-00C04F79EFBC"), ProjectType.CSharpClassLibrary }
+                { new Guid("FAE04EC0-301F-11D3-BF4B-00C04F79EFBC"), ProjectType.CSharp }
             };
         }
     }
