@@ -1,12 +1,13 @@
 # 🛠️ SlnParser
 
 
-[![GitHub license](https://img.shields.io/badge/Unlicense-MIT-blue.svg)](LICENSE)
+[![GitHub license](https://img.shields.io/badge/Unlicense-blue.svg)](LICENSE)
+[![Uses SemVer 2.0.0](https://img.shields.io/badge/Uses%20SemVer-2.0.0-green)](https://semver.org/spec/v2.0.0.html)
+[![Latest Release](https://img.shields.io/nuget/v/SlnParser)](https://www.nuget.org/packages/SlnParser/)
+[![Downloads](https://img.shields.io/nuget/dt/SlnParser)](https://www.nuget.org/packages/SlnParser/)  
 [![GitHub stars](https://img.shields.io/github/stars/OptiSchmopti/CsvProc9000?style=social)](https://github.com/OptiSchmopti/CsvProc9000/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/OptiSchmopti/CsvProc9000?style=social)](https://github.com/OptiSchmopti/CsvProc9000/network/members)
 [![GitHub watchers](https://img.shields.io/github/watchers/OptiSchmopti/CsvProc9000?style=social)](https://github.com/OptiSchmopti/CsvProc9000/watchers)  
-[![Latest Release](https://img.shields.io/nuget/v/SlnParser?style=for-the-badge)](https://www.nuget.org/packages/SlnParser/)
-[![Downloads](https://img.shields.io/nuget/dt/SlnParser?style=for-the-badge)](https://www.nuget.org/packages/SlnParser/)
 
 🛠️ .NET: Easy (to use) Parser for your .NET Solution (.sln) Files. This project targets `netstandard2.0` so it can basically be used anywhere you want. I've not yet run any performance tests.
 
