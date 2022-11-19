@@ -118,5 +118,6 @@ Global
 		{20AD21B6-0ABB-4DB5-8BA0-D9896E58E3E4}.Release|x64.Build.0 = Release|Any CPU
 		{20AD21B6-0ABB-4DB5-8BA0-D9896E58E3E4}.Release|x86.ActiveCfg = Release|Any CPU
 		{20AD21B6-0ABB-4DB5-8BA0-D9896E58E3E4}.Release|x86.Build.0 = Release|Any CPU
+		{2FD6FF99-971A-470A-BB0D-CE738AB29D6C}.Debug|x64.ActiveCfg = Debug|Any CPU
 	EndGlobalSection
 EndGlobal

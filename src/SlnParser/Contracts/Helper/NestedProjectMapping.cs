@@ -12,8 +12,8 @@ namespace SlnParser.Contracts.Helper
             DestinationId = new Guid(destinationId);
         }
 
-        public Guid TargetId { get; set; }
+        public Guid TargetId { get; }
 
-        public Guid DestinationId { get; set; }
+        public Guid DestinationId { get; }
     }
 }
