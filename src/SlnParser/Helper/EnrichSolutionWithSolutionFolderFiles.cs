@@ -89,7 +89,7 @@ namespace SlnParser.Helper
             _inASolutionItemsSection = line.StartsWith("ProjectSection(SolutionItems)");
         }
 
-        private void AddSolutionItemFile(Solution solution, string line)
+        private void AddSolutionItemFile(ISolution solution, string line)
         {
             if (!_inASolutionItemsSection) return;
 
@@ -100,7 +100,7 @@ namespace SlnParser.Helper
         }
 
         private static bool TryGetSolutionItemFile(
-            Solution solution,
+            ISolution solution,
             string line,
             out FileInfo solutionItemFile)
         {

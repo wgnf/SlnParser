@@ -24,7 +24,7 @@ namespace SlnParser.Helper
         }
 
         private static void MapConfigurationPlatformsToProjects(
-            Solution solution,
+            ISolution solution,
             IEnumerable<ProjectConfigurationPlatform> projectConfigurations)
         {
             foreach (var configuration in projectConfigurations)
@@ -32,7 +32,7 @@ namespace SlnParser.Helper
         }
 
         private static void MapConfigurationPlatformToProject(
-            Solution solution,
+            ISolution solution,
             ProjectConfigurationPlatform configuration)
         {
             if (!configuration.ProjectId.HasValue)
@@ -44,11 +44,7 @@ namespace SlnParser.Helper
                 .AllProjects
                 .FirstOrDefault(project => project.Id == configuration.ProjectId.Value);
 
-            if (project == null)
-                throw new UnexpectedSolutionStructureException(
-                    "Expected to find a project with the id " +
-                    $"'{configuration.ProjectId.Value}' for the Project-Platform-Configuration " +
-                    $"'{configuration.ConfigurationPlatform.Name}'");
+            if (project == null) return;
 
             if (!(project is SolutionProject solutionProject))
                 throw new UnexpectedSolutionStructureException(
