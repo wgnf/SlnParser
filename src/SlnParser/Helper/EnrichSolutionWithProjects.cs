@@ -36,7 +36,8 @@ namespace SlnParser.Helper
             var flatProjects = new Collection<IProject>();
             foreach (var line in fileContents)
             {
-                if (!_parseProjectDefinition.TryParseProjectDefinition(solution, line, out var project)) continue;
+                if (!_parseProjectDefinition.TryParseProjectDefinition(solution, line, out var project) || project == null) continue;
+                
                 flatProjects.Add(project);
             }
 
@@ -70,14 +71,14 @@ namespace SlnParser.Helper
 
             var nestedProjectMappings = new Collection<NestedProjectMapping>();
             foreach (var nestedProject in section)
-                if (TryGetNestedProjectMapping(nestedProject, out var nestedProjectMapping))
+                if (TryGetNestedProjectMapping(nestedProject, out var nestedProjectMapping) && nestedProjectMapping != null)
                     nestedProjectMappings.Add(nestedProjectMapping);
 
             return nestedProjectMappings;
         }
 
         private static bool TryGetNestedProjectMapping(string nestedProject,
-            out NestedProjectMapping nestedProjectMapping)
+            out NestedProjectMapping? nestedProjectMapping)
         {
             // https://regexr.com/653pi
             const string pattern = @"{(?<targetProjectId>[A-Za-z0-9\-]+)} = {(?<destinationProjectId>[A-Za-z0-9\-]+)}";

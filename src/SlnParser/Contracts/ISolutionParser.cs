@@ -27,7 +27,7 @@ namespace SlnParser.Contracts
         /// <param name="solutionFileName">The path to the solution file that you want to parse</param>
         /// <param name="solution">The parsed <see cref="Solution" /></param>
         /// <returns>If the solution could be successfully parsed or not</returns>
-        bool TryParse(string solutionFileName, out ISolution solution);
+        bool TryParse(string solutionFileName, out ISolution? solution);
 
         /// <summary>
         ///     Safely Parses the provided solution file (sln)
@@ -35,6 +35,6 @@ namespace SlnParser.Contracts
         /// <param name="solutionFile">The path to the solution file that you want to parse</param>
         /// <param name="solution">The parsed <see cref="Solution" /></param>
         /// <returns>If the solution could be successfully parsed or not</returns>
-        bool TryParse(FileInfo solutionFile, out ISolution solution);
+        bool TryParse(FileInfo solutionFile, out ISolution? solution);
     }
 }

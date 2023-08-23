@@ -16,7 +16,7 @@ namespace SlnParser.Contracts
         /// <summary>
         ///     The File of the solution
         /// </summary>
-        FileInfo File { get; set; }
+        FileInfo? File { get; set; }
 
         /// <summary>
         ///     The file format version of the solution

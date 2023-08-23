@@ -5,6 +5,6 @@
         bool TryParseProjectDefinition(
             Solution solution,
             string projectDefinition,
-            out IProject project);
+            out IProject? project);
     }
 }

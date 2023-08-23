@@ -9,17 +9,12 @@ namespace SlnParser.Helper
 {
     internal sealed class ProjectDefinitionParser : IParseProjectDefinition
     {
-        private readonly IProjectTypeMapper _projectTypeMapper;
-
-        public ProjectDefinitionParser()
-        {
-            _projectTypeMapper = new ProjectTypeMapper();
-        }
+        private readonly IProjectTypeMapper _projectTypeMapper = new ProjectTypeMapper();
 
         public bool TryParseProjectDefinition(
             Solution solution,
             string projectDefinition,
-            out IProject project)
+            out IProject? project)
         {
             project = null;
 
@@ -39,7 +34,7 @@ namespace SlnParser.Helper
             var projectTypeGuid = Guid.Parse(projectTypeGuidString);
             var projectGuid = Guid.Parse(projectGuidString);
 
-            var solutionDirectory = Path.GetDirectoryName(solution.File.FullName);
+            var solutionDirectory = Path.GetDirectoryName(solution.File?.FullName);
             if (solutionDirectory == null)
                 throw new UnexpectedSolutionStructureException("Solution-Directory could not be determined");
 

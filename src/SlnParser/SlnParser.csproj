@@ -25,6 +25,7 @@
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         
         <IsTrimmable>true</IsTrimmable>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>

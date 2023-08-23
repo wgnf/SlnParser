@@ -10,15 +10,10 @@ namespace SlnParser.Helper
 {
     internal sealed class EnrichSolutionWithSolutionFolderFiles : IEnrichSolution
     {
-        private readonly IParseProjectDefinition _parseProjectDefinition;
+        private readonly IParseProjectDefinition _parseProjectDefinition = new ProjectDefinitionParser();
         private bool _inASolutionItemsSection;
 
-        private SolutionFolder _solutionFolderForCurrentSection;
-
-        public EnrichSolutionWithSolutionFolderFiles()
-        {
-            _parseProjectDefinition = new ProjectDefinitionParser();
-        }
+        private SolutionFolder? _solutionFolderForCurrentSection;
 
         /*
          * line block:
@@ -55,7 +50,7 @@ namespace SlnParser.Helper
         private void TryGetSolutionFolder(
             Solution solution,
             string line,
-            out SolutionFolder solutionFolder)
+            out SolutionFolder? solutionFolder)
         {
             solutionFolder = null;
             if (!_parseProjectDefinition.TryParseProjectDefinition(solution, line, out var project))
@@ -93,16 +88,16 @@ namespace SlnParser.Helper
         {
             if (!_inASolutionItemsSection) return;
 
-            if (!TryGetSolutionItemFile(solution, line, out var solutionItemFile))
+            if (!TryGetSolutionItemFile(solution, line, out var solutionItemFile) || solutionItemFile == null)
                 return;
 
-            _solutionFolderForCurrentSection.AddFile(solutionItemFile);
+            _solutionFolderForCurrentSection?.AddFile(solutionItemFile);
         }
 
         private static bool TryGetSolutionItemFile(
             ISolution solution,
             string line,
-            out FileInfo solutionItemFile)
+            out FileInfo? solutionItemFile)
         {
             solutionItemFile = null;
 
@@ -111,7 +106,7 @@ namespace SlnParser.Helper
 
             solutionItem = solutionItem.Trim();
 
-            var solutionDirectory = Path.GetDirectoryName(solution.File.FullName);
+            var solutionDirectory = Path.GetDirectoryName(solution.File?.FullName);
             if (solutionDirectory == null)
                 throw new UnexpectedSolutionStructureException("Solution-Directory could not be determined");
 

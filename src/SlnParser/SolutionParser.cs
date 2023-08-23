@@ -65,7 +65,7 @@ namespace SlnParser
         }
 
         /// <inheritdoc />
-        public bool TryParse(string solutionFileName, out ISolution solution)
+        public bool TryParse(string solutionFileName, out ISolution? solution)
         {
             if (string.IsNullOrWhiteSpace(solutionFileName))
                 throw new ArgumentException($"'{nameof(solutionFileName)}' cannot be null or whitespace.",
@@ -76,7 +76,7 @@ namespace SlnParser
         }
 
         /// <inheritdoc />
-        public bool TryParse(FileInfo solutionFile, out ISolution solution)
+        public bool TryParse(FileInfo solutionFile, out ISolution? solution)
         {
             if (solutionFile is null)
                 throw new ArgumentNullException(nameof(solutionFile));
@@ -140,18 +140,16 @@ namespace SlnParser
             // because "VisualStudioVersion = " is 22 characters long
             var visualStudioVersion = string.Concat(line.Skip(22));
 
-            solution.VisualStudioVersion ??= new VisualStudioVersion();
             solution.VisualStudioVersion.Version = visualStudioVersion;
         }
 
-        private static void ProcessMinimumVisualStudioVersion(string line, Solution solution)
+        private static void ProcessMinimumVisualStudioVersion(string line, ISolution solution)
         {
             if (!line.StartsWith("MinimumVisualStudioVersion = ")) return;
 
             // because "MinimumVisualStudioVersion = " is 29 characters long
             var minimumVisualStudioVersion = string.Concat(line.Skip(29));
 
-            solution.VisualStudioVersion ??= new VisualStudioVersion();
             solution.VisualStudioVersion.MinimumVersion = minimumVisualStudioVersion;
         }
     }
