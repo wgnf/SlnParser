@@ -327,6 +327,78 @@ namespace SlnParser.Tests
                 .Contain(file => file.Name == "testNested1.txt");
         }
 
+        [Fact]
+        public void Parse_WithProjectWithoutPlatform_IsParsedCorrectly()
+        {
+            string solutionFilePath = GetTempFileName(".sln");
+
+            try
+            {
+                File.WriteAllText(solutionFilePath, @"﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project(""{D183A3D8-5FD8-494B-B014-37F57B35E655}"") = ""Test"", ""Test.dtproj"", ""{D5BDBC46-CEAF-4C92-8335-31450B76914F}""
+EndProject
+Global
+        GlobalSection(SolutionConfigurationPlatforms) = preSolution
+                SolutionConfigurationName|SolutionPlatformName = SolutionConfigurationName|SolutionPlatformName
+        EndGlobalSection
+        GlobalSection(ProjectConfigurationPlatforms) = postSolution
+                {D5BDBC46-CEAF-4C92-8335-31450B76914F}.SolutionConfigurationName|SolutionPlatformName.ActiveCfg = ProjectConfigurationName
+                {D5BDBC46-CEAF-4C92-8335-31450B76914F}.SolutionConfigurationName|SolutionPlatformName.Build.0 = ProjectConfigurationName
+        EndGlobalSection
+EndGlobal");
+
+                var sut = new SolutionParser();
+
+                var solution = sut.Parse(solutionFilePath);
+
+                solution
+                    .ConfigurationPlatforms
+                    .Should()
+                    .HaveCount(1);
+
+                ConfigurationPlatform configurationPlatform = solution
+                    .ConfigurationPlatforms
+                    .Single();
+
+                configurationPlatform
+                    .Configuration
+                    .Should()
+                    .Be("SolutionConfigurationName");
+
+                configurationPlatform
+                    .Platform
+                    .Should()
+                    .Be("SolutionPlatformName");
+
+                solution
+                    .AllProjects
+                    .Should()
+                    .HaveCount(1);
+
+                solution
+                    .Projects
+                    .Should()
+                    .HaveCount(1);
+
+                IProject project = solution.Projects.Single();
+                project.Id.Should().Be("D5BDBC46-CEAF-4C92-8335-31450B76914F");
+                project.Name.Should().Be("Test");
+                project.TypeGuid.Should().Be("D183A3D8-5FD8-494B-B014-37F57B35E655");
+                project.Type.Should().Be(ProjectType.Unknown);
+            }
+            finally
+            {
+                File.Delete(solutionFilePath);
+            }
+        }
+
+        private string GetTempFileName(string extension = null)
+        {
+            return Path.Combine(Path.GetTempPath(), $"{Path.GetRandomFileName()}{extension ?? string.Empty}");
+        }
+
         private static FileInfo LoadSolution(string solutionName)
         {
             var solutionFileName = $"./Solutions/{solutionName}.sln";
