@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace SlnParser.Contracts
@@ -36,5 +37,8 @@ namespace SlnParser.Contracts
 
         /// <inheritdoc />
         public IReadOnlyCollection<ConfigurationPlatform> ConfigurationPlatforms { get; internal set; }
+
+        /// <inheritdoc/>
+        public Guid? Guid { get; internal set; }
     }
 }

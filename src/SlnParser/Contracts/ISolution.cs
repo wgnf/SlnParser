@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace SlnParser.Contracts
@@ -42,5 +43,10 @@ namespace SlnParser.Contracts
         ///     The <see cref="ConfigurationPlatform" />s configured for this solution
         /// </summary>
         IReadOnlyCollection<ConfigurationPlatform> ConfigurationPlatforms { get; }
+
+        /// <summary>
+        /// The <see cref="Guid"/> of the solution.
+        /// </summary>
+        Guid? Guid { get; }
     }
 }

@@ -6,6 +6,6 @@ namespace SlnParser.Contracts.Helper
     {
         IEnumerable<ProjectConfigurationPlatform> Parse(
             IEnumerable<string> fileContents,
-            string startSection);
+            string sectionName);
     }
 }

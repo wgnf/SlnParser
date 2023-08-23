@@ -18,7 +18,7 @@ namespace SlnParser.Helper
         {
             var projectConfigurations = _parseSolutionConfigurationPlatform.Parse(
                 fileContents,
-                "GlobalSection(SolutionConfiguration");
+                "SolutionConfiguration");
             solution.ConfigurationPlatforms = projectConfigurations
                 .Select(projectConfiguration => projectConfiguration.ConfigurationPlatform)
                 .ToList()

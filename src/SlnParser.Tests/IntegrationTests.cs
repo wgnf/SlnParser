@@ -10,6 +10,62 @@ namespace SlnParser.Tests
     public class IntegrationTests
     {
         [Fact]
+        public void Parse_WithEmptySolutionFile_IsParsedCorrectly()
+        {
+            string solutionFilePath = GetTempFileName(".sln");
+
+            try
+            {
+                File.WriteAllText(solutionFilePath, string.Empty);
+
+                var sut = new SolutionParser();
+
+                var solution = sut.Parse(solutionFilePath);
+
+                solution
+                    .FileFormatVersion
+                    .Should()
+                    .Be(string.Empty);
+
+                VisualStudioVersion visualStudioVersion = solution.VisualStudioVersion;
+
+                visualStudioVersion
+                    .MinimumVersion
+                    .Should()
+                    .Be(string.Empty);
+
+                visualStudioVersion
+                    .Version
+                    .Should()
+                    .Be(string.Empty);
+
+                solution
+                    .Guid
+                    .Should()
+                    .Be(null);
+
+                solution
+                    .ConfigurationPlatforms
+                    .Should()
+                    .HaveCount(0);
+
+                solution
+                    .AllProjects
+                    .Should()
+                    .HaveCount(0);
+
+                solution
+                    .Projects
+                    .Should()
+                    .HaveCount(0);
+            }
+            finally
+            {
+                File.Delete(solutionFilePath);
+            }
+        }
+
+        [Fact]
         [Category("ParseSolution:SlnParser")]
         public void Should_Be_Able_To_Parse_SlnParser_Solution_Correctly()
         {
@@ -325,6 +381,40 @@ namespace SlnParser.Tests
                 .Files
                 .Should()
                 .Contain(file => file.Name == "testNested1.txt");
+        }
+
+        [Fact]
+        public void Parse_WithSolutionGuid_IsParsedCorrectly()
+        {
+            string solutionFilePath = GetTempFileName(".sln");
+
+            try
+            {
+                File.WriteAllText(solutionFilePath, @"﻿
+Global
+        GlobalSection(ExtensibilityGlobals) = postSolution 
+            SolutionGuid = {7F92F20E-4C3D-4316-BF60-105559EFEAFF} 
+        EndGlobalSection 
+EndGlobal");
+
+                var sut = new SolutionParser();
+
+                var solution = sut.Parse(solutionFilePath);
+
+                solution
+                    .Guid
+                    .Should()
+                    .Be("7F92F20E-4C3D-4316-BF60-105559EFEAFF");
+            }
+            finally
+            {
+                File.Delete(solutionFilePath);
+            }
+        }
+
+        private string GetTempFileName(string extension = null)
+        {
+            return Path.Combine(Path.GetTempPath(), $"{Path.GetRandomFileName()}{extension ?? string.Empty}");
         }
 
         private static FileInfo LoadSolution(string solutionName)
