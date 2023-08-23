@@ -64,14 +64,14 @@ namespace SlnParser.Tests
                 .ElementAt(0)
                 .Configuration
                 .Should()
-                .Be(BuildConfiguration.Debug);
+                .Be(BuildConfigurationDefaults.Debug);
 
             solution
                 .ConfigurationPlatforms
                 .ElementAt(0)
                 .Platform
                 .Should()
-                .Be(BuildPlatform.AnyCpu);
+                .Be(BuildPlatformDefaults.AnyCpu);
 
             solution
                 .ConfigurationPlatforms
@@ -85,14 +85,14 @@ namespace SlnParser.Tests
                 .ElementAt(1)
                 .Configuration
                 .Should()
-                .Be(BuildConfiguration.Debug);
+                .Be(BuildConfigurationDefaults.Debug);
 
             solution
                 .ConfigurationPlatforms
                 .ElementAt(1)
                 .Platform
                 .Should()
-                .Be(BuildPlatform.X64);
+                .Be(BuildPlatformDefaults.X64);
 
             solution
                 .ConfigurationPlatforms
@@ -106,14 +106,14 @@ namespace SlnParser.Tests
                 .ElementAt(2)
                 .Configuration
                 .Should()
-                .Be(BuildConfiguration.Debug);
+                .Be(BuildConfigurationDefaults.Debug);
 
             solution
                 .ConfigurationPlatforms
                 .ElementAt(2)
                 .Platform
                 .Should()
-                .Be(BuildPlatform.X86);
+                .Be(BuildPlatformDefaults.X86);
 
             solution
                 .ConfigurationPlatforms
@@ -127,14 +127,14 @@ namespace SlnParser.Tests
                 .ElementAt(3)
                 .Configuration
                 .Should()
-                .Be(BuildConfiguration.Release);
+                .Be(BuildConfigurationDefaults.Release);
 
             solution
                 .ConfigurationPlatforms
                 .ElementAt(3)
                 .Platform
                 .Should()
-                .Be(BuildPlatform.AnyCpu);
+                .Be(BuildPlatformDefaults.AnyCpu);
 
             solution
                 .ConfigurationPlatforms
@@ -148,14 +148,14 @@ namespace SlnParser.Tests
                 .ElementAt(4)
                 .Configuration
                 .Should()
-                .Be(BuildConfiguration.Release);
+                .Be(BuildConfigurationDefaults.Release);
 
             solution
                 .ConfigurationPlatforms
                 .ElementAt(4)
                 .Platform
                 .Should()
-                .Be(BuildPlatform.X64);
+                .Be(BuildPlatformDefaults.X64);
 
             solution
                 .ConfigurationPlatforms
@@ -169,14 +169,14 @@ namespace SlnParser.Tests
                 .ElementAt(5)
                 .Configuration
                 .Should()
-                .Be(BuildConfiguration.Release);
+                .Be(BuildConfigurationDefaults.Release);
 
             solution
                 .ConfigurationPlatforms
                 .ElementAt(5)
                 .Platform
                 .Should()
-                .Be(BuildPlatform.X86);
+                .Be(BuildPlatformDefaults.X86);
 
             // -- Projects
             solution
