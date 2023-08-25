@@ -1,8 +1,7 @@
 ﻿namespace SlnParser.Contracts
 {
     /// <summary>
-    ///     A Configuration of a Solution or Project describing which <see cref="BuildConfiguration" /> and
-    ///     <see cref="BuildPlatform" /> is targeted
+    ///     A Configuration of a Solution or Project describing which configuration and build-platform is targeted
     /// </summary>
     public class ConfigurationPlatform
     {
@@ -10,12 +9,12 @@
         ///     Create a new instance of <see cref="ConfigurationPlatform" />
         /// </summary>
         /// <param name="name">The name of the <see cref="ConfigurationPlatform" /></param>
-        /// <param name="configuration">The <see cref="BuildConfiguration" /> of the <see cref="ConfigurationPlatform" /></param>
-        /// <param name="platform">The <see cref="BuildPlatform" /> of the <see cref="ConfigurationPlatform" /></param>
+        /// <param name="configuration">The configuration of the <see cref="ConfigurationPlatform" /></param>
+        /// <param name="platform">The build-platform of the <see cref="ConfigurationPlatform" /></param>
         public ConfigurationPlatform(
             string name,
-            BuildConfiguration configuration,
-            BuildPlatform platform)
+            string configuration,
+            string platform)
         {
             Name = name;
             Configuration = configuration;
@@ -28,13 +27,13 @@
         public string Name { get; }
 
         /// <summary>
-        ///     The <see cref="BuildConfiguration" /> the <see cref="ConfigurationPlatform" /> is targeting
+        ///     The configuration the <see cref="ConfigurationPlatform" /> is targeting
         /// </summary>
-        public BuildConfiguration Configuration { get; }
+        public string Configuration { get; }
 
         /// <summary>
-        ///     The <see cref="BuildPlatform" /> the <see cref="ConfigurationPlatform" /> is targeting
+        ///     The build-platform the <see cref="ConfigurationPlatform" /> is targeting
         /// </summary>
-        public BuildPlatform Platform { get; }
+        public string Platform { get; }
     }
 }
