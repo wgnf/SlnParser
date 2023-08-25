@@ -21,13 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="Solutions\SlnParser.sln">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Include="Solutions\TestSln.sln">
+        <None Include="Solutions\*.sln">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>

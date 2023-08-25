@@ -327,6 +327,51 @@ namespace SlnParser.Tests
                 .Contain(file => file.Name == "testNested1.txt");
         }
 
+        [Fact]
+        public void Parse_WithProjectWithoutPlatform_IsParsedCorrectly()
+        {
+            var solutionFile = LoadSolution("ProjectWithoutPlatform");
+
+            var sut = new SolutionParser();
+
+            var solution = sut.Parse(solutionFile);
+
+            solution
+                .ConfigurationPlatforms
+                .Should()
+                .HaveCount(1);
+
+            var configurationPlatform = solution
+                .ConfigurationPlatforms
+                .Single();
+
+            configurationPlatform
+                .Configuration
+                .Should()
+                .Be("SolutionConfigurationName");
+
+            configurationPlatform
+                .Platform
+                .Should()
+                .Be("SolutionPlatformName");
+
+            solution
+                .AllProjects
+                .Should()
+                .HaveCount(1);
+
+            solution
+                .Projects
+                .Should()
+                .HaveCount(1);
+
+            var project = solution.Projects.Single();
+            project.Id.Should().Be("D5BDBC46-CEAF-4C92-8335-31450B76914F");
+            project.Name.Should().Be("Test");
+            project.TypeGuid.Should().Be("D183A3D8-5FD8-494B-B014-37F57B35E655");
+            project.Type.Should().Be(ProjectType.Unknown);
+        }
+
         private static FileInfo LoadSolution(string solutionName)
         {
             var solutionFileName = $"./Solutions/{solutionName}.sln";

@@ -52,7 +52,7 @@ namespace SlnParser.Helper
         {
             // c.f.: https://regexr.com/65t6u
             const string pattern =
-                @"((?<projectId>\{[A-Za-z0-9\-]+\}).)?(?<name>.+) = (?<buildConfiguration>.+)\|(?<buildPlatform>.+)";
+                @"((?<projectId>\{[A-Za-z0-9\-]+\}).)?(?<name>.+) = (?<buildConfiguration>.+?)(?:\|(?<buildPlatform>.+))?$";
 
             var match = Regex.Match(line, pattern);
             if (!match.Success)
