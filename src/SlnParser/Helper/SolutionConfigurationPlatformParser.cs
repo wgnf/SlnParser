@@ -78,40 +78,14 @@ namespace SlnParser.Helper
         private static ConfigurationPlatform ParseConfigurationPlatformFromMatch(Match match)
         {
             var configurationName = match.Groups["name"].Value;
-            var buildConfigurationString = match.Groups["buildConfiguration"].Value;
-            var buildPlatformString = match.Groups["buildPlatform"].Value;
-
-            var buildConfiguration = ParseBuildConfiguration(buildConfigurationString);
-            var buildPlatform = ParseBuildPlatform(buildPlatformString);
+            var buildConfiguration = match.Groups["buildConfiguration"].Value;
+            var buildPlatform = match.Groups["buildPlatform"].Value;
 
             var configurationPlatform = new ConfigurationPlatform(
                 configurationName,
                 buildConfiguration,
                 buildPlatform);
             return configurationPlatform;
-        }
-
-        private static BuildConfiguration ParseBuildConfiguration(string buildConfigurationString)
-        {
-            return buildConfigurationString switch
-            {
-                "Debug" => BuildConfiguration.Debug,
-                "Release" => BuildConfiguration.Release,
-                _ => throw new UnexpectedSolutionStructureException(
-                    $"{buildConfigurationString} is not recognized as a possible value for {nameof(BuildConfiguration)}")
-            };
-        }
-
-        private static BuildPlatform ParseBuildPlatform(string buildPlatformString)
-        {
-            return buildPlatformString switch
-            {
-                "Any CPU" => BuildPlatform.AnyCpu,
-                "x64" => BuildPlatform.X64,
-                "x86" => BuildPlatform.X86,
-                _ => throw new UnexpectedSolutionStructureException(
-                    $"{buildPlatformString} is not recognized as a possible value for {nameof(BuildPlatform)}")
-            };
         }
     }
 }
