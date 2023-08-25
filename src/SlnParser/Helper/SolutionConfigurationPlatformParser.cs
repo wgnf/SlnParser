@@ -10,6 +10,8 @@ namespace SlnParser.Helper
 {
     internal sealed class SolutionConfigurationPlatformParser : IParseSolutionConfigurationPlatform
     {
+        private readonly ISectionParser _sectionParser = new SectionParser();
+
         public IEnumerable<ProjectConfigurationPlatform> Parse(
             IEnumerable<string> fileContents,
             string sectionName)
@@ -18,7 +20,7 @@ namespace SlnParser.Helper
             if (string.IsNullOrWhiteSpace(sectionName))
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(sectionName));
 
-            var sectionContents = SectionParser.GetFileContentsInGlobalSection(fileContents, sectionName);
+            var sectionContents = _sectionParser.GetFileContentsInGlobalSection(fileContents, sectionName);
             var projectConfigurationPlatforms = ParseConfigurationPlatforms(sectionContents);
             return projectConfigurationPlatforms;
         }

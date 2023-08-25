@@ -1,15 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using SlnParser.Contracts.Helper;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SlnParser.Helper
 {
-    internal class SectionParser
+    internal class SectionParser : ISectionParser
     {
-        internal static IEnumerable<string> GetFileContentsInGlobalSection(
+        public IEnumerable<string> GetFileContentsInGlobalSection(
             IEnumerable<string> fileContents,
             string sectionName)
         {
-            string startSection = $"GlobalSection({sectionName}";
+            var startSection = $"GlobalSection({sectionName}";
             const string endSection = "EndGlobalSection";
 
             return GetFileContentsInSection(fileContents, startSection, endSection);

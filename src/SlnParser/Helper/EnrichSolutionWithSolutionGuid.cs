@@ -9,17 +9,17 @@ namespace SlnParser.Helper
 {
     internal sealed class EnrichSolutionWithSolutionGuid : IEnrichSolution
     {
+        private readonly ISectionParser _sectionParser = new SectionParser();
+
         public void Enrich(Solution solution, IEnumerable<string> fileContents)
         {
-            var extensibilityGlobals = SectionParser.GetFileContentsInGlobalSection(
+            var extensibilityGlobals = _sectionParser.GetFileContentsInGlobalSection(
                 fileContents,
                 "ExtensibilityGlobals");
 
-            IEnumerable<Guid?> solutionGuids = extensibilityGlobals.Select(ExtractSolutionGuid).Where(x => x.HasValue);
-            if (solutionGuids.Any())
-            {
-                solution.Guid = solutionGuids.Single();
-            }
+            solution.Guid = extensibilityGlobals
+                .Select(ExtractSolutionGuid)
+                .FirstOrDefault(x => x.HasValue);
         }
 
         private Guid? ExtractSolutionGuid(string line)
@@ -31,7 +31,7 @@ namespace SlnParser.Helper
                 return null;
             }
 
-            string guidString = match.Groups[1].Value;
+            var guidString = match.Groups[1].Value;
             return new Guid(guidString);
         }
     }

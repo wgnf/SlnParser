@@ -12,57 +12,48 @@ namespace SlnParser.Tests
         [Fact]
         public void Parse_WithEmptySolutionFile_IsParsedCorrectly()
         {
-            string solutionFilePath = GetTempFileName(".sln");
+            var solutionFile = LoadSolution("Empty");
 
-            try
-            {
-                File.WriteAllText(solutionFilePath, string.Empty);
+            var sut = new SolutionParser();
 
-                var sut = new SolutionParser();
+            var solution = sut.Parse(solutionFile);
 
-                var solution = sut.Parse(solutionFilePath);
+            solution
+                .FileFormatVersion
+                .Should()
+                .Be(string.Empty);
 
-                solution
-                    .FileFormatVersion
-                    .Should()
-                    .Be(string.Empty);
+            var visualStudioVersion = solution.VisualStudioVersion;
 
-                VisualStudioVersion visualStudioVersion = solution.VisualStudioVersion;
+            visualStudioVersion
+                .MinimumVersion
+                .Should()
+                .Be(string.Empty);
 
-                visualStudioVersion
-                    .MinimumVersion
-                    .Should()
-                    .Be(string.Empty);
+            visualStudioVersion
+                .Version
+                .Should()
+                .Be(string.Empty);
 
-                visualStudioVersion
-                    .Version
-                    .Should()
-                    .Be(string.Empty);
+            solution
+                .Guid
+                .Should()
+                .Be(null);
 
-                solution
-                    .Guid
-                    .Should()
-                    .Be(null);
+            solution
+                .ConfigurationPlatforms
+                .Should()
+                .HaveCount(0);
 
-                solution
-                    .ConfigurationPlatforms
-                    .Should()
-                    .HaveCount(0);
+            solution
+                .AllProjects
+                .Should()
+                .HaveCount(0);
 
-                solution
-                    .AllProjects
-                    .Should()
-                    .HaveCount(0);
-
-                solution
-                    .Projects
-                    .Should()
-                    .HaveCount(0);
-            }
-            finally
-            {
-                File.Delete(solutionFilePath);
-            }
+            solution
+                .Projects
+                .Should()
+                .HaveCount(0);
         }
 
         [Fact]
@@ -386,35 +377,16 @@ namespace SlnParser.Tests
         [Fact]
         public void Parse_WithSolutionGuid_IsParsedCorrectly()
         {
-            string solutionFilePath = GetTempFileName(".sln");
+            var solutionFile = LoadSolution("SolutionGuid");
 
-            try
-            {
-                File.WriteAllText(solutionFilePath, @"﻿
-Global
-        GlobalSection(ExtensibilityGlobals) = postSolution 
-            SolutionGuid = {7F92F20E-4C3D-4316-BF60-105559EFEAFF} 
-        EndGlobalSection 
-EndGlobal");
+            var sut = new SolutionParser();
 
-                var sut = new SolutionParser();
+            var solution = sut.Parse(solutionFile);
 
-                var solution = sut.Parse(solutionFilePath);
-
-                solution
-                    .Guid
-                    .Should()
-                    .Be("7F92F20E-4C3D-4316-BF60-105559EFEAFF");
-            }
-            finally
-            {
-                File.Delete(solutionFilePath);
-            }
-        }
-
-        private string GetTempFileName(string extension = null)
-        {
-            return Path.Combine(Path.GetTempPath(), $"{Path.GetRandomFileName()}{extension ?? string.Empty}");
+            solution
+                .Guid
+                .Should()
+                .Be("7F92F20E-4C3D-4316-BF60-105559EFEAFF");
         }
 
         private static FileInfo LoadSolution(string solutionName)
