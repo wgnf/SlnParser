@@ -111,14 +111,14 @@ namespace SlnParser.Tests
                 .ElementAt(0)
                 .Configuration
                 .Should()
-                .Be(BuildConfiguration.Debug);
+                .Be("Debug");
 
             solution
                 .ConfigurationPlatforms
                 .ElementAt(0)
                 .Platform
                 .Should()
-                .Be(BuildPlatform.AnyCpu);
+                .Be("Any CPU");
 
             solution
                 .ConfigurationPlatforms
@@ -132,14 +132,14 @@ namespace SlnParser.Tests
                 .ElementAt(1)
                 .Configuration
                 .Should()
-                .Be(BuildConfiguration.Debug);
+                .Be("Debug");
 
             solution
                 .ConfigurationPlatforms
                 .ElementAt(1)
                 .Platform
                 .Should()
-                .Be(BuildPlatform.X64);
+                .Be("x64");
 
             solution
                 .ConfigurationPlatforms
@@ -153,14 +153,14 @@ namespace SlnParser.Tests
                 .ElementAt(2)
                 .Configuration
                 .Should()
-                .Be(BuildConfiguration.Debug);
+                .Be("Debug");
 
             solution
                 .ConfigurationPlatforms
                 .ElementAt(2)
                 .Platform
                 .Should()
-                .Be(BuildPlatform.X86);
+                .Be("x86");
 
             solution
                 .ConfigurationPlatforms
@@ -174,14 +174,14 @@ namespace SlnParser.Tests
                 .ElementAt(3)
                 .Configuration
                 .Should()
-                .Be(BuildConfiguration.Release);
+                .Be("Release");
 
             solution
                 .ConfigurationPlatforms
                 .ElementAt(3)
                 .Platform
                 .Should()
-                .Be(BuildPlatform.AnyCpu);
+                .Be("Any CPU");
 
             solution
                 .ConfigurationPlatforms
@@ -195,14 +195,14 @@ namespace SlnParser.Tests
                 .ElementAt(4)
                 .Configuration
                 .Should()
-                .Be(BuildConfiguration.Release);
+                .Be("Release");
 
             solution
                 .ConfigurationPlatforms
                 .ElementAt(4)
                 .Platform
                 .Should()
-                .Be(BuildPlatform.X64);
+                .Be("x64");
 
             solution
                 .ConfigurationPlatforms
@@ -216,14 +216,14 @@ namespace SlnParser.Tests
                 .ElementAt(5)
                 .Configuration
                 .Should()
-                .Be(BuildConfiguration.Release);
+                .Be("Release");
 
             solution
                 .ConfigurationPlatforms
                 .ElementAt(5)
                 .Platform
                 .Should()
-                .Be(BuildPlatform.X86);
+                .Be("x86");
 
             // -- Projects
             solution
@@ -375,10 +375,55 @@ namespace SlnParser.Tests
         }
 
         [Fact]
+        public void Parse_WithProjectWithoutPlatform_IsParsedCorrectly()
+        {
+            var solutionFile = LoadSolution("ProjectWithoutPlatform");
+
+            var sut = new SolutionParser();
+
+            var solution = sut.Parse(solutionFile);
+
+            solution
+                .ConfigurationPlatforms
+                .Should()
+                .HaveCount(1);
+
+            var configurationPlatform = solution
+                .ConfigurationPlatforms
+                .Single();
+
+            configurationPlatform
+                .Configuration
+                .Should()
+                .Be("SolutionConfigurationName");
+
+            configurationPlatform
+                .Platform
+                .Should()
+                .Be("SolutionPlatformName");
+
+            solution
+                .AllProjects
+                .Should()
+                .HaveCount(1);
+
+            solution
+                .Projects
+                .Should()
+                .HaveCount(1);
+
+            var project = solution.Projects.Single();
+            project.Id.Should().Be("D5BDBC46-CEAF-4C92-8335-31450B76914F");
+            project.Name.Should().Be("Test");
+            project.TypeGuid.Should().Be("D183A3D8-5FD8-494B-B014-37F57B35E655");
+            project.Type.Should().Be(ProjectType.Unknown);
+        }
+ 
+        [Fact]
         public void Parse_WithSolutionGuid_IsParsedCorrectly()
         {
             var solutionFile = LoadSolution("SolutionGuid");
-
+          
             var sut = new SolutionParser();
 
             var solution = sut.Parse(solutionFile);
@@ -388,7 +433,7 @@ namespace SlnParser.Tests
                 .Should()
                 .Be("7F92F20E-4C3D-4316-BF60-105559EFEAFF");
         }
-
+   
         private static FileInfo LoadSolution(string solutionName)
         {
             var solutionFileName = $"./Solutions/{solutionName}.sln";

@@ -26,10 +26,4 @@
         </None>
     </ItemGroup>
 
-    <ItemGroup>
-        <None Include="Solutions\TestSln.sln">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-    </ItemGroup>
-
 </Project>
