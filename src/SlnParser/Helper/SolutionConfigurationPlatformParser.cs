@@ -10,33 +10,19 @@ namespace SlnParser.Helper
 {
     internal sealed class SolutionConfigurationPlatformParser : IParseSolutionConfigurationPlatform
     {
+        private readonly ISectionParser _sectionParser = new SectionParser();
+
         public IEnumerable<ProjectConfigurationPlatform> Parse(
             IEnumerable<string> fileContents,
-            string startSection)
+            string sectionName)
         {
             if (fileContents == null) throw new ArgumentNullException(nameof(fileContents));
-            if (string.IsNullOrWhiteSpace(startSection))
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(startSection));
+            if (string.IsNullOrWhiteSpace(sectionName))
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(sectionName));
 
-            var sectionContents = GetFileContentsInSection(fileContents, startSection);
+            var sectionContents = _sectionParser.GetFileContentsInGlobalSection(fileContents, sectionName);
             var projectConfigurationPlatforms = ParseConfigurationPlatforms(sectionContents);
             return projectConfigurationPlatforms;
-        }
-
-        private static IEnumerable<string> GetFileContentsInSection(
-            IEnumerable<string> fileContents,
-            string startSection)
-        {
-            const string endSection = "EndGlobalSection";
-
-            var section = fileContents
-                .SkipWhile(line => !line.StartsWith(startSection))
-                .TakeWhile(line => !line.StartsWith(endSection))
-                .Where(line => !line.StartsWith(startSection))
-                .Where(line => !line.StartsWith(endSection))
-                .Where(line => !string.IsNullOrWhiteSpace(line));
-
-            return section.ToList();
         }
 
         private static IEnumerable<ProjectConfigurationPlatform> ParseConfigurationPlatforms(

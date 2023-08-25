@@ -19,7 +19,7 @@ namespace SlnParser.Helper
         {
             var projectConfigurations = _parseSolutionConfigurationPlatform.Parse(
                 fileContents,
-                "GlobalSection(ProjectConfiguration");
+                "ProjectConfiguration");
             MapConfigurationPlatformsToProjects(solution, projectConfigurations);
         }
 

@@ -2,9 +2,9 @@
 
 namespace SlnParser.Contracts.Helper
 {
-    internal interface IParseSolutionConfigurationPlatform
+    internal interface ISectionParser
     {
-        IEnumerable<ProjectConfigurationPlatform> Parse(
+        IEnumerable<string> GetFileContentsInGlobalSection(
             IEnumerable<string> fileContents,
             string sectionName);
     }

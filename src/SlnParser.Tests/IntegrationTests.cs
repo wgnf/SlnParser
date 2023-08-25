@@ -10,6 +10,53 @@ namespace SlnParser.Tests
     public class IntegrationTests
     {
         [Fact]
+        public void Parse_WithEmptySolutionFile_IsParsedCorrectly()
+        {
+            var solutionFile = LoadSolution("Empty");
+
+            var sut = new SolutionParser();
+
+            var solution = sut.Parse(solutionFile);
+
+            solution
+                .FileFormatVersion
+                .Should()
+                .Be(string.Empty);
+
+            var visualStudioVersion = solution.VisualStudioVersion;
+
+            visualStudioVersion
+                .MinimumVersion
+                .Should()
+                .Be(string.Empty);
+
+            visualStudioVersion
+                .Version
+                .Should()
+                .Be(string.Empty);
+
+            solution
+                .Guid
+                .Should()
+                .Be(null);
+
+            solution
+                .ConfigurationPlatforms
+                .Should()
+                .HaveCount(0);
+
+            solution
+                .AllProjects
+                .Should()
+                .HaveCount(0);
+
+            solution
+                .Projects
+                .Should()
+                .HaveCount(0);
+        }
+
+        [Fact]
         [Category("ParseSolution:SlnParser")]
         public void Should_Be_Able_To_Parse_SlnParser_Solution_Correctly()
         {
@@ -371,7 +418,22 @@ namespace SlnParser.Tests
             project.TypeGuid.Should().Be("D183A3D8-5FD8-494B-B014-37F57B35E655");
             project.Type.Should().Be(ProjectType.Unknown);
         }
+ 
+        [Fact]
+        public void Parse_WithSolutionGuid_IsParsedCorrectly()
+        {
+            var solutionFile = LoadSolution("SolutionGuid");
+          
+            var sut = new SolutionParser();
 
+            var solution = sut.Parse(solutionFile);
+
+            solution
+                .Guid
+                .Should()
+                .Be("7F92F20E-4C3D-4316-BF60-105559EFEAFF");
+        }
+   
         private static FileInfo LoadSolution(string solutionName)
         {
             var solutionFileName = $"./Solutions/{solutionName}.sln";
