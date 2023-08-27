@@ -34,28 +34,28 @@ csharp_space_between_method_declaration_parameter_list_parentheses = false
 #Style - Code block preferences
 
 #prefer no curly braces if allowed
-csharp_prefer_braces = false:suggestion
+csharp_prefer_braces = false:warning
 
 #Style - expression bodied member options
 
 #prefer block bodies for constructors
-csharp_style_expression_bodied_constructors = false:suggestion
+csharp_style_expression_bodied_constructors = false:warning
 #prefer block bodies for methods
-csharp_style_expression_bodied_methods = false:suggestion
+csharp_style_expression_bodied_methods = false:warning
 
 #Style - Expression-level  preferences
 
 #prefer objects to be initialized using object initializers when possible
-dotnet_style_object_initializer = true:suggestion
+dotnet_style_object_initializer = true:warning
 
 #Style - implicit and explicit types
 
 #prefer var over explicit type in all cases, unless overridden by another code style rule
-csharp_style_var_elsewhere = true:suggestion
+csharp_style_var_elsewhere = true:warning
 #prefer var is used to declare variables with built-in system types such as int
-csharp_style_var_for_built_in_types = true:suggestion
+csharp_style_var_for_built_in_types = true:warning
 #prefer var when the type is already mentioned on the right-hand side of a declaration expression
-csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_var_when_type_is_apparent = true:warning
 
 #Style - language keyword and framework type options
 
@@ -72,7 +72,7 @@ csharp_preferred_modifier_order = public, internal, private, static, readonly, s
 #Style - qualification options
 
 #prefer fields not to be prefaced with this. or Me. in Visual Basic
-dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_field = false:warning
 
 end_of_line = crlf
 insert_final_newline = true
