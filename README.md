@@ -1,7 +1,7 @@
 # 🛠️ SlnParser
 
 
-[![GitHub license](https://img.shields.io/badge/Unlicense-blue.svg)](LICENSE)
+[![GitHub license](https://img.shields.io/badge/MIT-blue.svg)](LICENSE)
 [![Uses SemVer 2.0.0](https://img.shields.io/badge/Uses%20SemVer-2.0.0-green)](https://semver.org/spec/v2.0.0.html)
 [![Latest Release](https://img.shields.io/nuget/v/SlnParser)](https://www.nuget.org/packages/SlnParser/)
 [![Downloads](https://img.shields.io/nuget/dt/SlnParser)](https://www.nuget.org/packages/SlnParser/)  

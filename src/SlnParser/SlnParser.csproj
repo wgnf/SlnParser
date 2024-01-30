@@ -16,7 +16,7 @@
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <PackageIcon>SlnParserLogo.png</PackageIcon>
 
-        <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
         <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
