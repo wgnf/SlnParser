@@ -13,6 +13,7 @@ namespace SlnParser
     public sealed class SolutionParser : ISolutionParser
     {
         private readonly IEnumerable<IEnrichSolution> _solutionEnrichers;
+        private readonly SlnxParser _slnxParser = new SlnxParser();
 
         /// <summary>
         ///     Creates a new instance of <see cref="SolutionParser" />
@@ -51,12 +52,17 @@ namespace SlnParser
                 throw new ArgumentNullException(nameof(solutionFile));
             if (!solutionFile.Exists)
                 throw new FileNotFoundException("Provided Solution-File does not exist", solutionFile.FullName);
-            if (!solutionFile.Extension.Equals(".sln"))
-                throw new InvalidDataException("The provided file is not a solution file!");
+
+            var fileExtension = solutionFile.Extension;
 
             try
             {
-                var solution = ParseInternal(solutionFile);
+                var solution = fileExtension switch
+                {
+                    ".sln" => ParseSlnInternal(solutionFile),
+                    ".slnx" => _slnxParser.Parse(solutionFile),
+                    _ => throw new InvalidDataException($"The provided file '{solutionFile.FullName}' is not a solution file!"),
+                };
                 return solution;
             }
             catch (Exception exception)
@@ -94,11 +100,12 @@ namespace SlnParser
             }
         }
 
-        private ISolution ParseInternal(FileInfo solutionFile)
+        private ISolution ParseSlnInternal(FileInfo solutionFile)
         {
             var solution = new Solution
             {
-                Name = Path.GetFileNameWithoutExtension(solutionFile.FullName), File = solutionFile
+                Name = Path.GetFileNameWithoutExtension(solutionFile.FullName), 
+                File = solutionFile,
             };
             var allLines = File.ReadAllLines(solutionFile.FullName);
             var allLinesTrimmed = allLines

@@ -1,0 +1,23 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/SolutionFolder1/">
+    <File Path="something/something.txt" />
+    <File Path="test123.txt" />
+    <File Path="test456.txt" />
+    <Project Path="ClassLibraryInSolutionFolder1/ClassLibraryInSolutionFolder1.csproj" />
+    <Project Path="ConsoleApp1/ConsoleApp1.csproj" />
+  </Folder>
+  <Folder Name="/SolutionFolder1/NestedSolutionFolder/">
+    <File Path="testNested1.txt" />
+    <Project Path="ClassLibraryNestedSolutionFolder/ClassLibraryNestedSolutionFolder.csproj" />
+  </Folder>
+  <Project Path="WebApplication/WebApplication.csproj" Type="e6fdf86b-f3d1-11d4-8576-0002a516ece8">
+    <Platform Project="AnyCPU" />
+  </Project>
+  <Project Path="WinFormsApp1/WinFormsApp1.csproj" />
+  <Project Path="WpfAppNotInASolutionFolder/WpfAppNotInASolutionFolder.csproj" />
+</Solution>

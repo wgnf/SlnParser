@@ -9,7 +9,7 @@
 [![GitHub forks](https://img.shields.io/github/forks/OptiSchmopti/CsvProc9000?style=social)](https://github.com/OptiSchmopti/CsvProc9000/network/members)
 [![GitHub watchers](https://img.shields.io/github/watchers/OptiSchmopti/CsvProc9000?style=social)](https://github.com/OptiSchmopti/CsvProc9000/watchers)  
 
-🛠️ .NET: Easy (to use) Parser for your .NET Solution (.sln) Files. This project targets `netstandard2.0` so it can basically be used anywhere you want. I've not yet run any performance tests.
+🛠️ .NET: Easy (to use) Parser for your .NET Solution (s, .slnx) Files. This project targets `netstandard2.0` so it can basically be used anywhere you want. I've not yet run any performance tests.
 
 ## 💻 Usage
 
@@ -18,7 +18,7 @@
 ```cs
 
 var parser = new SolutionParser();
-var parsedSolution = parser.Parse("path/to/your/solution.sln");
+var parsedSolution = parser.Parse("path/to/your/solution.sln"); // or ".slnx"
 
 ```
 

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.Serialization;
 
 namespace SlnParser.Contracts.Exceptions
 {
     /// <summary>
     ///     Exception that is thrown when a solution could not be parsed
     /// </summary>
-    [Serializable]
     public class ParseSolutionFailedException : Exception
     {
         /// <summary>
@@ -19,13 +17,6 @@ namespace SlnParser.Contracts.Exceptions
             : base(
                 $"Could not parse provided Solution '{solutionFile.FullName}'. See inner exception for more information",
                 inner)
-        {
-        }
-
-        /// <inheritdoc />
-        protected ParseSolutionFailedException(
-            SerializationInfo info,
-            StreamingContext context) : base(info, context)
         {
         }
     }

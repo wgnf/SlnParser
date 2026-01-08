@@ -8,21 +8,21 @@ namespace SlnParser.Contracts
     public interface ISolutionParser
     {
         /// <summary>
-        ///     Parses the provided solution file (sln)
+        ///     Parses the provided solution file (sln or slnx)
         /// </summary>
         /// <param name="solutionFileName">The path to the solution file that you want to parse</param>
         /// <returns>The parsed <see cref="Solution" /></returns>
         ISolution Parse(string solutionFileName);
 
         /// <summary>
-        ///     Parses the provided solution file (sln)
+        ///     Parses the provided solution file (sln or slnx)
         /// </summary>
         /// <param name="solutionFile">The path to the solution file that you want to parse</param>
         /// <returns>The parsed <see cref="Solution" /></returns>
         ISolution Parse(FileInfo solutionFile);
 
         /// <summary>
-        ///     Safely Parses the provided solution file (sln)
+        ///     Safely Parses the provided solution file (sln or slnx)
         /// </summary>
         /// <param name="solutionFileName">The path to the solution file that you want to parse</param>
         /// <param name="solution">The parsed <see cref="Solution" /></param>
@@ -30,7 +30,7 @@ namespace SlnParser.Contracts
         bool TryParse(string solutionFileName, out ISolution? solution);
 
         /// <summary>
-        ///     Safely Parses the provided solution file (sln)
+        ///     Safely Parses the provided solution file (sln or slnx)
         /// </summary>
         /// <param name="solutionFile">The path to the solution file that you want to parse</param>
         /// <param name="solution">The parsed <see cref="Solution" /></param>
