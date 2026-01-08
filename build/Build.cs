@@ -87,7 +87,8 @@ public class Build : NukeBuild
                 Log.Information("Packing {ProjectName}...", packProject.Name);
                 DotNetPack(s => s
                     .SetProject(packProject.Path)
-                    .SetVersion(GitVersion?.NuGetVersionV2 ?? "0.1.0")
+                    // TODO: this is not the right version because it omits the pre-release stuff but NUKE does not provide the correct GitVersion shit for some fucking reason
+                    .SetVersion(GitVersion?.MajorMinorPatch ?? "0.1.0")
                     .SetOutputDirectory(BuildDirectory / ".output/Packages")
                     .SetConfiguration(Configuration)
                     .EnableIncludeSource()
