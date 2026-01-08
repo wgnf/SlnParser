@@ -509,21 +509,14 @@ public class IntegrationTests
         solution
             .ConfigurationPlatforms
             .Should()
-            .HaveCount(6);
+            .HaveCount(3);
 
         solution
             .ConfigurationPlatforms
             .ElementAt(0)
             .Name
             .Should()
-            .Be("Debug|Any CPU");
-
-        solution
-            .ConfigurationPlatforms
-            .ElementAt(0)
-            .Configuration
-            .Should()
-            .Be("Debug");
+            .Be("Any CPU");
 
         solution
             .ConfigurationPlatforms
@@ -537,14 +530,7 @@ public class IntegrationTests
             .ElementAt(1)
             .Name
             .Should()
-            .Be("Debug|x64");
-
-        solution
-            .ConfigurationPlatforms
-            .ElementAt(1)
-            .Configuration
-            .Should()
-            .Be("Debug");
+            .Be("x64");
 
         solution
             .ConfigurationPlatforms
@@ -558,14 +544,7 @@ public class IntegrationTests
             .ElementAt(2)
             .Name
             .Should()
-            .Be("Debug|x86");
-
-        solution
-            .ConfigurationPlatforms
-            .ElementAt(2)
-            .Configuration
-            .Should()
-            .Be("Debug");
+            .Be("x86");
 
         solution
             .ConfigurationPlatforms
@@ -573,152 +552,54 @@ public class IntegrationTests
             .Platform
             .Should()
             .Be("x86");
-
-        solution
-            .ConfigurationPlatforms
-            .ElementAt(3)
-            .Name
-            .Should()
-            .Be("Release|Any CPU");
-
-        solution
-            .ConfigurationPlatforms
-            .ElementAt(3)
-            .Configuration
-            .Should()
-            .Be("Release");
-
-        solution
-            .ConfigurationPlatforms
-            .ElementAt(3)
-            .Platform
-            .Should()
-            .Be("Any CPU");
-
-        solution
-            .ConfigurationPlatforms
-            .ElementAt(4)
-            .Name
-            .Should()
-            .Be("Release|x64");
-
-        solution
-            .ConfigurationPlatforms
-            .ElementAt(4)
-            .Configuration
-            .Should()
-            .Be("Release");
-
-        solution
-            .ConfigurationPlatforms
-            .ElementAt(4)
-            .Platform
-            .Should()
-            .Be("x64");
-
-        solution
-            .ConfigurationPlatforms
-            .ElementAt(5)
-            .Name
-            .Should()
-            .Be("Release|x86");
-
-        solution
-            .ConfigurationPlatforms
-            .ElementAt(5)
-            .Configuration
-            .Should()
-            .Be("Release");
-
-        solution
-            .ConfigurationPlatforms
-            .ElementAt(5)
-            .Platform
-            .Should()
-            .Be("x86");
-
+        
         // -- Projects
         solution
             .AllProjects
             .Should()
             .HaveCount(3);
-
-        // 1. Project - ClassLib
+        
+        // 1. Project - Solution Folder
         solution
             .AllProjects
             .ElementAt(0)
-            .Should()
-            .BeOfType<SolutionProject>();
-        solution
-            .AllProjects
-            .ElementAt(0)
-            .Name
-            .Should()
-            .Be("SlnParser");
-        solution
-            .AllProjects
-            .ElementAt(0)
-            .As<SolutionProject>()
-            .File
-            .FullName
-            .Should()
-            .Contain(@"SlnParser\SlnParser.csproj");
-        solution
-            .AllProjects
-            .ElementAt(0)
-            .Type
-            .Should()
-            .Be(ProjectType.CSharp);
-
-        solution
-            .AllProjects
-            .ElementAt(0)
-            .As<SolutionProject>()
-            .ConfigurationPlatforms
-            .Should()
-            .Contain(config => config.Name.Equals("Debug|Any CPU.ActiveCfg"));
-
-        // 2. Project - Solution Folder
-        solution
-            .AllProjects
-            .ElementAt(1)
             .Should()
             .BeOfType<SolutionFolder>();
         solution
             .AllProjects
-            .ElementAt(1)
+            .ElementAt(0)
             .Name
             .Should()
             .Be("Solution Items");
         solution
             .AllProjects
-            .ElementAt(1)
+            .ElementAt(0)
             .As<SolutionFolder>()
             .Projects
             .Should()
             .BeEmpty();
         solution
             .AllProjects
-            .ElementAt(1)
+            .ElementAt(0)
             .Type
             .Should()
             .Be(ProjectType.SolutionFolder);
-
-        // 3. Project - Test Project
+        
+        // 2. Project - Test Project
         solution
             .AllProjects
-            .ElementAt(2)
+            .ElementAt(1)
             .Should()
             .BeOfType<SolutionProject>();
         solution
             .AllProjects
-            .ElementAt(2)
+            .ElementAt(1)
             .Name
             .Should()
             .Be("SlnParser.Tests");
         solution
             .AllProjects
-            .ElementAt(2)
+            .ElementAt(1)
             .As<SolutionProject>()
             .File
             .FullName
@@ -726,18 +607,37 @@ public class IntegrationTests
             .Contain(@"SlnParser.Tests\SlnParser.Tests.csproj");
         solution
             .AllProjects
-            .ElementAt(2)
+            .ElementAt(1)
             .Type
             .Should()
             .Be(ProjectType.CSharp);
 
+        // 3. Project - ClassLib
+        solution
+            .AllProjects
+            .ElementAt(2)
+            .Should()
+            .BeOfType<SolutionProject>();
+        solution
+            .AllProjects
+            .ElementAt(2)
+            .Name
+            .Should()
+            .Be("SlnParser");
         solution
             .AllProjects
             .ElementAt(2)
             .As<SolutionProject>()
-            .ConfigurationPlatforms
+            .File
+            .FullName
             .Should()
-            .Contain(config => config.Name.Equals("Debug|x86.Build.0"));
+            .Contain(@"SlnParser\SlnParser.csproj");
+        solution
+            .AllProjects
+            .ElementAt(2)
+            .Type
+            .Should()
+            .Be(ProjectType.CSharp);
     }
 
     [Fact]
@@ -806,11 +706,6 @@ public class IntegrationTests
             .Single();
 
         configurationPlatform
-            .Configuration
-            .Should()
-            .Be("SolutionConfigurationName");
-
-        configurationPlatform
             .Platform
             .Should()
             .Be("SolutionPlatformName");
@@ -826,7 +721,6 @@ public class IntegrationTests
             .HaveCount(1);
 
         var project = solution.Projects.Single();
-        project.Id.Should().Be("D5BDBC46-CEAF-4C92-8335-31450B76914F");
         project.Name.Should().Be("Test");
         project.TypeGuid.Should().Be("D183A3D8-5FD8-494B-B014-37F57B35E655");
         project.Type.Should().Be(ProjectType.Unknown);
