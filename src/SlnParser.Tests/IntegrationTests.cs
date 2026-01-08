@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using SlnParser.Contracts;
 using System.ComponentModel;
 using System.IO;

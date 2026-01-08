@@ -48,8 +48,10 @@ public class Build : NukeBuild
         .Executes(() =>
         {
             if (GitVersion == null)
+            {
                 Logger.Warn(
                     "GitVersion appears to be null. Have a look at it! Versions are defaulting to 0.1.0 for now...");
+            }
 
             DotNetBuild(s => s
                 .SetProjectFile(Solution)
