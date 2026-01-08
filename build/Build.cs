@@ -1,16 +1,15 @@
+using System.IO;
 using System.Linq;
 using Nuke.Common;
 using Nuke.Common.CI;
-using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Utilities.Collections;
-using static Nuke.Common.IO.FileSystemTasks;
+using Serilog;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
-[CheckBuildProjectConfigurations]
 [ShutdownDotNetAfterServerBuild]
 public class Build : NukeBuild
 {
@@ -31,8 +30,8 @@ public class Build : NukeBuild
         .Before(Restore)
         .Executes(() =>
         {
-            SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
-            BuildDirectory.GlobDirectories("**/.output").ForEach(DeleteDirectory);
+            SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(dir => Directory.Delete(dir, true));
+            BuildDirectory.GlobDirectories("**/.output").ForEach(dir => Directory.Delete(dir, true));
         });
 
     Target Restore => _ => _
@@ -49,7 +48,7 @@ public class Build : NukeBuild
         {
             if (GitVersion == null)
             {
-                Logger.Warn(
+                Log.Warning(
                     "GitVersion appears to be null. Have a look at it! Versions are defaulting to 0.1.0 for now...");
             }
 
@@ -85,7 +84,7 @@ public class Build : NukeBuild
 
             foreach (var packProject in packProjects)
             {
-                using var block = Logger.Block($"Packing {packProject.Name}");
+                Log.Information("Packing {ProjectName}...", packProject.Name);
                 DotNetPack(s => s
                     .SetProject(packProject.Path)
                     .SetVersion(GitVersion?.NuGetVersionV2 ?? "0.1.0")
@@ -109,7 +108,7 @@ public class Build : NukeBuild
 
             foreach (var package in packages)
             {
-                Logger.Info($"Publishing {package}");
+                Log.Information("Publishing {PackageName}...", package);
                 DotNetNuGetPush(s => s
                     .SetApiKey(NuGetApiKey)
                     .SetSymbolApiKey(NuGetApiKey)
