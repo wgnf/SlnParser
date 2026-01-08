@@ -1,0 +1,10 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="SolutionConfigurationName" />
+    <Platform Name="SolutionPlatformName" />
+  </Configurations>
+  <Project Path="Test.dtproj" Type="d183a3d8-5fd8-494b-b014-37f57b35e655">
+    <BuildType Project="ProjectConfigurationName" />
+    <Platform Project="?" />
+  </Project>
+</Solution>

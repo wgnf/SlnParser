@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
 
 namespace SlnParser
 {
@@ -13,6 +14,7 @@ namespace SlnParser
     public sealed class SolutionParser : ISolutionParser
     {
         private readonly IEnumerable<IEnrichSolution> _solutionEnrichers;
+        private readonly IProjectTypeMapper _projectTypeMapper = new  ProjectTypeMapper();
 
         /// <summary>
         ///     Creates a new instance of <see cref="SolutionParser" />
@@ -51,12 +53,17 @@ namespace SlnParser
                 throw new ArgumentNullException(nameof(solutionFile));
             if (!solutionFile.Exists)
                 throw new FileNotFoundException("Provided Solution-File does not exist", solutionFile.FullName);
-            if (!solutionFile.Extension.Equals(".sln"))
-                throw new InvalidDataException("The provided file is not a solution file!");
+
+            var fileExtension = solutionFile.Extension;
 
             try
             {
-                var solution = ParseInternal(solutionFile);
+                var solution = fileExtension switch
+                {
+                    ".sln" => ParseSlnInternal(solutionFile),
+                    ".slnx" => ParseSlnxInternal(solutionFile),
+                    _ => throw new InvalidDataException($"The provided file '{solutionFile.FullName}' is not a solution file!"),
+                };
                 return solution;
             }
             catch (Exception exception)
@@ -94,11 +101,12 @@ namespace SlnParser
             }
         }
 
-        private ISolution ParseInternal(FileInfo solutionFile)
+        private ISolution ParseSlnInternal(FileInfo solutionFile)
         {
             var solution = new Solution
             {
-                Name = Path.GetFileNameWithoutExtension(solutionFile.FullName), File = solutionFile
+                Name = Path.GetFileNameWithoutExtension(solutionFile.FullName), 
+                File = solutionFile,
             };
             var allLines = File.ReadAllLines(solutionFile.FullName);
             var allLinesTrimmed = allLines
@@ -112,6 +120,48 @@ namespace SlnParser
             foreach (var line in allLines)
                 ProcessLine(line, solution);
 
+            return solution;
+        }
+
+        private ISolution ParseSlnxInternal(FileInfo solutionFile)
+        {
+            // the new SLNX has no information about the file format version, VS version and minimal VS version, so it's omitted.
+            var solution = new Solution
+            {
+                Name = Path.GetFileNameWithoutExtension(solutionFile.FullName), 
+                File = solutionFile,
+            };
+            
+            var fileContent = File.ReadAllText(solutionFile.FullName);
+            if (string.IsNullOrEmpty(fileContent.Trim()))
+            {
+                return solution;
+            }
+            
+            var xmlReaderSettings = new XmlReaderSettings
+            {
+                DtdProcessing = DtdProcessing.Prohibit, // Prevent XXE
+                XmlResolver = null, // Disable external entity resolution
+            };
+            using var xmlContentStream = solutionFile.OpenRead();
+            var xmlDocument = new XmlDocument();
+
+            using var xmlReader = XmlReader.Create(xmlContentStream, xmlReaderSettings);
+            xmlDocument.Load(xmlReader);
+            
+            var root = xmlDocument.DocumentElement;
+            if (root == null) throw new UnexpectedSolutionStructureException($"Solution file '{solutionFile.FullName}' does not contain a root element");
+
+            var structuredProjects = new List<IProject>();
+
+            foreach (var xmlElement in root.ChildNodes.OfType<XmlElement>())
+            {
+                var projectsFromElement = ParseSlnxElement(xmlElement, solutionFile);
+                structuredProjects.AddRange(projectsFromElement);
+            }
+
+            solution.AllProjects = structuredProjects;
+            solution.Projects = structuredProjects;
             return solution;
         }
 
@@ -152,6 +202,78 @@ namespace SlnParser
             var minimumVisualStudioVersion = string.Concat(line.Skip(29));
 
             solution.VisualStudioVersion.MinimumVersion = minimumVisualStudioVersion;
+        }
+        
+        private List<IProject> ParseSlnxElement(XmlElement xmlElement, FileInfo solutionFile)
+        {
+            return xmlElement.Name switch
+            {
+                "Folder" => ParseSlnxFolder(xmlElement, solutionFile),
+                "Project" => ParseSlnxProject(xmlElement, solutionFile),
+                _ => new List<IProject>(),
+            };
+        }
+        
+        private List<IProject> ParseSlnxFolder(XmlElement xmlElement, FileInfo solutionFile)
+        {
+            var folderName = xmlElement.GetAttribute("Name");
+            if (string.IsNullOrWhiteSpace(folderName))
+            {
+                throw new UnexpectedSolutionStructureException($"Could not find solution folder name attribute in solution '{solutionFile.FullName}'");
+            }
+
+            var actualFolderName = folderName.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
+
+            var solutionFolderTypeId = new Guid("2150E333-8FDC-42A3-9474-1A3956D46DE8");
+            var solutionFolder = new SolutionFolder(Guid.Empty, actualFolderName, solutionFolderTypeId, ProjectType.SolutionFolder);
+            var projects = new List<IProject>
+            {
+                solutionFolder,
+            };
+
+            foreach (var childElement in xmlElement.ChildNodes.OfType<XmlElement>())
+            {
+                var childProjects = ParseSlnxElement(childElement, solutionFile);
+                foreach (var childProject in childProjects)
+                {
+                    solutionFolder.AddProject(childProject);
+                    projects.Add(childProject);
+                }
+            }
+
+            return projects;
+        }
+
+        private List<IProject> ParseSlnxProject(XmlElement xmlElement, FileInfo solutionFile)
+        {
+            const string defaultProjectTypeId = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}";
+
+            var projectPath = xmlElement.GetAttribute("Path");
+            if (string.IsNullOrWhiteSpace(projectPath))
+            {
+                throw new UnexpectedSolutionStructureException($"Could not find solution project path attribute in solution file '{solutionFile.FullName}'.");
+            }
+
+            var projectTypeIdText = xmlElement.GetAttribute("Type");
+            projectTypeIdText = string.IsNullOrWhiteSpace(projectTypeIdText)
+                ? defaultProjectTypeId
+                // the new project type id notation does not quite fit the known format, so it is adjusted.
+                : $"{{{projectTypeIdText.ToUpper()}}}";
+            var projectTypeId = Guid.Parse(projectTypeIdText);
+            var projectType = _projectTypeMapper.Map(projectTypeId);
+
+            var projectFilePath = new FileInfo(projectPath);
+            var isRelative = Path.IsPathRooted(projectFilePath.FullName);
+            var projectFullPath = isRelative
+                ? Path.Combine(solutionFile.Directory?.FullName ?? string.Empty, projectFilePath.FullName)
+                : projectFilePath.FullName;
+
+            // the project name is part of its path.
+            var actualProjectName = Path.GetFileNameWithoutExtension(projectFullPath);
+
+            // elements in the SLNX file don't have any IDs anymore, so it's omitted.
+            var solutionProject = new SolutionProject(Guid.Empty, actualProjectName, projectTypeId, projectType, new FileInfo(projectFullPath));
+            return new List<IProject> { solutionProject };
         }
     }
 }

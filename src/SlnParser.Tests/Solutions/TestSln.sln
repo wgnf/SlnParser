@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfAppNotInASolutionFolder"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsApp1", "WinFormsApp1\WinFormsApp1.csproj", "{D4E03E9B-EE01-462A-B2F3-45AC775ADC7E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication", "WebApplication\WebApplication.csproj", "{20AD21B6-0ABB-4DB5-8BA0-D9896E58E3E4}"
+Project("{E6FDF86B-F3D1-11D4-8576-0002A516ECE8}") = "WebApplication", "WebApplication\WebApplication.csproj", "{20AD21B6-0ABB-4DB5-8BA0-D9896E58E3E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
